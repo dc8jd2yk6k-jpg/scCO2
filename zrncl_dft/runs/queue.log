@@ -35,3 +35,5 @@
 2026-09-30 21:48:16 START [8] 03_intercalate/electronic.py --stage charges
 2026-09-30 21:48:27 END   [8] rc=0 03_intercalate/electronic.py --stage charges
 2026-09-30 21:48:27 START [9] 03_intercalate/electronic.py --stage spin
+2026-09-30 22:32:49 ABORT [9] VM reboot killed the spin job at SCF iteration 17 (moment 1.0 -> 0.007 muB); requeued later
+2026-09-30 22:32:49 START [9] 03_intercalate/electronic.py --stage unfold

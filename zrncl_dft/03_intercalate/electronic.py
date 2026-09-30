@@ -307,7 +307,7 @@ if args.stage == 'fragments':
     efrag = {}
     for name, idx in [('slab', lay), ('molecule', mol)]:
         frag = atoms[idx]
-        frag.calc = gpaw_calc(os.path.join(RUN, f'fragment_{name}.txt'), KSCF,
+        frag.calc = gpaw_calc(os.path.join(RUN, f'fragment_{name}.txt'), KAUX,
                               width=WIDTH, convergence=CONV, gpts=ref.wfs.gd.N_c)
         efrag[name] = frag.get_potential_energy()
         dens[name] = frag.calc.get_all_electron_density(gridrefinement=2)
@@ -319,19 +319,7 @@ if args.stage == 'fragments':
     z = np.arange(nz) * dz
     prof = drho.mean(axis=(0, 1)) * area                         # e/A
     cdc = np.cumsum(prof) * dz                                   # e
-    e0 = json.load(open(os.path.join(RESULTS, 'intercalate_electronic.json')))['energy_nonspin']
-    from dftd3.ase import DFTD3
-    ed3 = {}
-    for name, sub in [('total', atoms), ('slab', atoms[lay]), ('molecule', atoms[mol])]:
-        sub = sub.copy()
-        sub.calc = DFTD3(method='PBE', damping='d3bj')
-        ed3[name] = sub.get_potential_energy()
-    e_int_pbe = e0 - efrag['slab'] - efrag['molecule']
-    e_int_d3 = ed3['total'] - ed3['slab'] - ed3['molecule']
-    update_json({'E_int_frozen_frags_PBE': e_int_pbe,
-                 'E_int_frozen_frags_D3_part': e_int_d3,
-                 'E_int_frozen_frags_PBE_D3': e_int_pbe + e_int_d3,
-                 'E_fragments': efrag, 'E_D3': ed3})
+    update_json({'fragments_kpts': KAUX['size']})
     if world.rank == 0:
         np.savez(os.path.join(RESULTS, 'intercalate_drho.npz'), z=z, drho_z=prof,
                  cdc=cdc, zatoms=atoms.positions[:, 2],
