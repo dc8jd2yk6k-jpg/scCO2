@@ -1,0 +1,27 @@
+
+
+  Refining changed edges:
+  Iteration 1:
+
+  12805 points changed.
+  Iteration 2:
+
+  2 points changed.
+
+
+  Calculating min. surface disance:
+
+
+  Writing output file: Done.
+{
+ "molecule": 0.6403732404453361,
+ "layer": -0.6403541241890256,
+ "total_electrons_integrated": 736.9999808837438,
+ "total_electrons_expected": 737.0,
+ "Co": 0.5930507952808277,
+ "by_species": {
+  "Zr": 2.2375231004256526,
+  "N": -1.6079040444741317,
+  "Cl": -0.6936544683704234
+ }
+}

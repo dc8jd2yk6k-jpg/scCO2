@@ -36,8 +36,8 @@ def pdos():
     d = np.load(f, allow_pickle=True)
     e = d['energies'] - fermi_level('intercalate', d)
     pd = dict(zip(list(d['keys']), d['pdos']))
-    fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.4, 5.2), sharex=True,
-                                 gridspec_kw={'hspace': 0.08})
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.4, 5.4), sharex=True,
+                                 gridspec_kw={'hspace': 0.22})
     a1.fill_between(e, 0, smooth(d['dos'], e), color=GRID, lw=0, label='total')
     for key, col, lab in [('Zr-d', BLUE, 'Zr 4d'), ('N-p', ORANGE, 'N 2p'),
                           ('Cl-p', AQUA, 'Cl 3p')]:
@@ -99,9 +99,9 @@ def unfold():
     ax.set_xticks(d['ticks'])
     ax.set_xticklabels(['Γ', 'M', 'K', 'Γ'])
     ax.set_xlim(x[0], x[-1])
-    ax.set_ylim(-4, 3)
+    ax.set_ylim(-4, 2)
     ax.set_ylabel('E − E$_F$ (eV)')
-    ax.legend(loc='lower left', fontsize=7.5)
+    ax.legend(loc='center left', bbox_to_anchor=(0.0, 0.33), fontsize=7.5)
     ax.set_title('Unfolded bands of ZrNCl{Co(Cp)₂}₀.₁₀ (1×1 ZrNCl zone)', loc='left',
                  fontsize=10)
     fig.savefig(os.path.join(FIG, 'intercalate_unfolded_bands.png'), bbox_inches='tight')

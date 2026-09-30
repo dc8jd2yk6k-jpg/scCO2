@@ -71,8 +71,8 @@ def main():
         mol = F >= 0.5
         ax.scatter(X[mol], e[mol], s=6, color=ORANGE, lw=0, zorder=3, alpha=0.9)
         ax.axhline(ef_rel, color=INK, lw=1.0, ls='--')
-        ax.text(x[-1] * 0.02, ef_rel + 0.05, f'E$_F$ = CBM + {1e3 * ef_rel:.0f} meV',
-                ha='left', va='bottom', fontsize=8, color=INK)
+        ax.text(x[-1] * 0.02, ef_rel - 0.08, f'E$_F$ = CBM + {1e3 * ef_rel:.0f} meV',
+                ha='left', va='top', fontsize=8, color=INK)
         for t in d['ticks']:
             ax.axvline(t, color=GRID, lw=0.8, zorder=0)
         ax.set_xticks(d['ticks'])
@@ -80,7 +80,7 @@ def main():
         ax.set_xlim(x[0], x[-1])
         ax.scatter([], [], s=20, color=BLUE, label='ZrNCl layer (unfolded weight)')
         ax.scatter([], [], s=20, color=ORANGE, label='Co(Cp)₂ guest states')
-        ax.legend(loc='lower left', fontsize=7.5)
+        ax.legend(loc='center left', bbox_to_anchor=(0.0, 0.45), fontsize=7.5)
     ax.set_title('(c) ZrNCl{Co(Cp)₂}₀.₁₀, unfolded', loc='left', fontsize=9.5, color=INK2)
     axes[0].set_ylabel('E − E$_{CBM}$(ZrNCl) (eV)')
     axes[0].set_ylim(EMIN, EMAX)

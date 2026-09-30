@@ -21,3 +21,17 @@
 2026-09-30 15:50:54 START [5] 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
 2026-09-30 16:40:41 END   [5] rc=0 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
 2026-09-30 16:40:41 START [6] 03_intercalate/electronic.py --stage scf
+2026-09-30 17:22:24 END   [6] rc=0 03_intercalate/electronic.py --stage scf
+2026-09-30 17:22:24 START [7] 03_intercalate/electronic.py --stage dos
+2026-09-30 17:23:53 ABORT [7] guest e1* level only 0.15 eV above E_F: redo SCF on 9x9x1 with 0.02 eV smearing (0.05 eV put ~0.2 e on the guest)
+2026-09-30 17:24:43 START [6] 03_intercalate/electronic.py --stage scf
+2026-09-30 19:23:02 END   [6] rc=0 03_intercalate/electronic.py --stage scf
+2026-09-30 19:23:02 START [7] 03_intercalate/electronic.py --stage unfold
+2026-09-30 20:07:04 ABORT [7] unfold: loosen eigenstate tolerance to 1e-4 (180 bands converging slowly)
+2026-09-30 20:07:04 START [7] 03_intercalate/electronic.py --stage unfold
+2026-09-30 21:05:23 ABORT [7] unfold stalled at eigst 1e-3 (top bands); converge 168 of 180 bands
+2026-09-30 21:05:23 START [7] 03_intercalate/electronic.py --stage unfold
+2026-09-30 21:48:16 END   [7] rc=0 03_intercalate/electronic.py --stage unfold
+2026-09-30 21:48:16 START [8] 03_intercalate/electronic.py --stage charges
+2026-09-30 21:48:27 END   [8] rc=0 03_intercalate/electronic.py --stage charges
+2026-09-30 21:48:27 START [9] 03_intercalate/electronic.py --stage spin

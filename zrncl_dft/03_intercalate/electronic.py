@@ -1,10 +1,12 @@
 """Electronic structure and charge transfer of the ZrNCl{Co(Cp)2}0.10 model.
 
 Stages (run in order; each checkpoints to runs/intercalate/):
-  scf        non-spin-polarised SCF, 6x6x1 k (contains the folded K/K')
-  spin       spin-polarised SCF started from 1 mu_B on Co (moment survives?)
-  dos        non-SCF 9x9x1 mesh -> tetrahedron DOS / PDOS, electron count in
-             the ZrNCl conduction band, N(E_F)
+  scf        non-spin-polarised SCF, 9x9x1 k (contains the folded K/K'),
+             Fermi-Dirac 0.02 eV, followed directly by the DOS analysis:
+             tetrahedron DOS / PDOS, electron count in the ZrNCl conduction
+             band, guest levels, N(E_F)
+  spin       spin-polarised SCF (6x6x1) started from 1 mu_B on Co
+  dos        (optional) the DOS analysis from a stored scf.gpw
   unfold     non-SCF along G-M-K-G of the 1x1 ZrNCl cell, spectral weights
              (band unfolding of the pseudo wave functions)
   charges    Hirshfeld and Bader (all-electron density) charges per fragment
@@ -28,14 +30,18 @@ from common import gpaw_calc, unfold_path, unfold_weights, RESULTS, ROOT  # noqa
 
 p = argparse.ArgumentParser()
 p.add_argument('--stage', required=True,
-               choices=['scf', 'spin', 'dos', 'unfold', 'charges', 'fragments'])
+               choices=['scf', 'spin', 'dos', 'unfold', 'charges', 'fragments', 'scfU'])
 p.add_argument('--structure', default=None)
+p.add_argument('--U', type=float, default=4.0, help='U_eff on Co 3d (eV) for --stage scfU')
 args = p.parse_args()
 
 RUN = os.path.join(ROOT, 'runs', 'intercalate')
 NB = 190
 NMOL = 21
-KSCF = {'size': (6, 6, 1), 'gamma': True}
+KSCF = {'size': (9, 9, 1), 'gamma': True}   # contains the folded K/K' (0, +-1/3)
+WIDTH = 0.02                                 # eV; 0.05 eV put ~0.2 e into the guest
+                                             # e1'' level lying only ~0.15 eV above E_F
+KAUX = {'size': (6, 6, 1), 'gamma': True}    # spin-polarised check
 CONV = {'energy': 1e-6, 'density': 1e-5, 'eigenstates': 1e-8}
 M = np.array([[2, 1, 0], [-1, 2, 0], [0, 0, 1]])   # A_SC = M a_PC
 
@@ -70,12 +76,15 @@ def layer_mol_indices(atoms):
 # --------------------------------------------------------------------- scf
 if args.stage == 'scf':
     atoms = structure()
-    atoms.calc = gpaw_calc(os.path.join(RUN, 'scf.txt'), KSCF, width=0.05,
-                           nbands=NB, convergence=CONV)
+    atoms.calc = gpaw_calc(os.path.join(RUN, 'scf.txt'), KSCF, width=WIDTH,
+                           nbands=NB, convergence=dict(CONV, bands=NB - 10))
     e = atoms.get_potential_energy()
     atoms.calc.write(os.path.join(RUN, 'scf.gpw'))
     update_json({'energy_nonspin': e, 'ef_scf': atoms.calc.get_fermi_level(),
+                 'kscf': KSCF['size'], 'width': WIDTH,
                  'structure_used': args.structure or 'relaxed_pw/lcao'})
+    args.stage = 'dos-from-scf'
+    dos_calc = atoms.calc      # analysed below by dos_analysis()
 
 # --------------------------------------------------------------------- spin
 if args.stage == 'spin':
@@ -83,22 +92,21 @@ if args.stage == 'spin':
     mag = np.zeros(len(atoms))
     mag[len(atoms) - NMOL] = 1.0          # Co
     atoms.set_initial_magnetic_moments(mag)
-    atoms.calc = gpaw_calc(os.path.join(RUN, 'scf_spin.txt'), KSCF, width=0.05,
+    atoms.calc = gpaw_calc(os.path.join(RUN, 'scf_spin.txt'), KAUX, width=WIDTH,
                            spin=True, nbands=NB, convergence=CONV)
     e = atoms.get_potential_energy()
     mtot = atoms.calc.get_magnetic_moment()
     mloc = atoms.calc.get_magnetic_moments()
-    e0 = json.load(open(os.path.join(RESULTS, 'intercalate_electronic.json')))['energy_nonspin']
-    update_json({'energy_spin': e, 'E_spin_minus_nonspin': e - e0,
-                 'magmom_total': mtot, 'magmom_Co': float(mloc[len(atoms) - NMOL]),
-                 'magmom_abs_sum': float(np.abs(mloc).sum())})
+    update_json({'spin_check': {'kpts': KAUX['size'], 'width': WIDTH, 'energy_spin': e,
+                                'magmom_total': mtot,
+                                'magmom_Co': float(mloc[len(atoms) - NMOL]),
+                                'magmom_abs_sum': float(np.abs(mloc).sum())}})
 
 # --------------------------------------------------------------------- dos
-if args.stage == 'dos':
-    calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).fixed_density(
-        kpts={'size': (9, 9, 1), 'gamma': True}, nbands=NB,
-        symmetry={'point_group': False, 'time_reversal': True},
-        convergence={'bands': NB - 10, 'eigenstates': 1e-5}, txt=os.path.join(RUN, 'dos.txt'))
+def dos_analysis(calc, tag='', kmesh=None):
+    """Tetrahedron DOS/PDOS, dense-mesh Fermi level by electron counting, and
+    the split of the conduction electrons between ZrNCl-layer states and
+    Co(Cp)2 guest states.  Saves results/intercalate_dos{tag}.npz, returns dict."""
     atoms = calc.get_atoms()
     ef_scf = calc.get_fermi_level()     # fixed_density keeps the SCF Fermi level
     from gpaw.dos import DOSCalculator
@@ -107,7 +115,7 @@ if args.stage == 'dos':
     eig = np.array([calc.get_eigenvalues(kpt=k) for k in range(nk)])
     wk = np.asarray(calc.get_k_point_weights())
     nel = calc.get_number_of_electrons()
-    # Fermi level of the dense mesh by electron counting with the tetrahedron DOS:
+    # Fermi level of the mesh by electron counting with the tetrahedron DOS:
     # take the highest clean gap below E_F (all bands beneath it are full) and
     # integrate the DOS upward from there.
     ng = None
@@ -138,8 +146,8 @@ if args.stage == 'dos':
     for m, name in enumerate(['dxy', 'dyz', 'dz2', 'dzx', 'dx2-y2']):
         comp[f'Co-{name}'] = dc.raw_pdos(energies, a=ico, l=2, m=m, width=0.0)
 
-    # occupations of the dense-mesh states at the tetrahedron E_F (0..2 per state,
-    # 10 meV Fermi-Dirac only to split states exactly at E_F)
+    # occupations at the tetrahedron E_F (0..2 per state; 10 meV Fermi-Dirac
+    # only to split states exactly at E_F)
     occ = 2.0 / (np.exp(np.clip((eig - ef) / 0.01, -60, 60)) + 1.0)
     # state-resolved character: sum_i |<p_i|psi_nk>|^2 over all projectors
     # of the molecule's atoms vs. the layer's atoms
@@ -169,11 +177,17 @@ if args.stage == 'dos':
     n_above_layer = float((wk[:, None] * occ * (1 - frac_mol))[sel].sum())
     n_above_mol = float((wk[:, None] * occ * frac_mol)[sel].sum())
     n_cb_layer_states = float((wk[:, None] * occ)[sel & ~ismol].sum())
+    n_guest_states = float((wk[:, None] * occ)[sel & ismol].sum())
+    # guest e1'' band: molecular states within +-1 eV of E_F
+    g = ismol & (np.abs(eig - ef) < 1.0)
+    e1 = {'min': float(eig[g].min() - ef), 'max': float(eig[g].max() - ef)} if g.any() else None
     mol_levels = sorted(set(np.round(eig[ismol & (eig > ef - 4) & (eig < ef + 3)], 2)))
     mol_occ = [float(np.round(v - ef, 3)) for v in mol_levels if v < ef]
     mol_emp = [float(np.round(v - ef, 3)) for v in mol_levels if v >= ef]
     nef_tot = float(dc.raw_dos([ef], width=0.0)[0])
-    res = {'ef_dos': ef, 'ef_scf_mesh': ef_scf, 'kdos': [9, 9, 1],
+    nef_layer = float(2 * dc.calculate(np.array([ef]), eig, 1 - frac_mol, width=0.0)[0])
+    nef_guest = float(2 * dc.calculate(np.array([ef]), eig, frac_mol, width=0.0)[0])
+    res = {'ef_dos': ef, 'ef_scf_mesh': ef_scf, 'kdos': list(kmesh or KSCF['size']),
            'clean_gap_band_index': ng, 'clean_gap_energy': float(e_gap),
            'n_el_check_sum_occ': float((wk[:, None] * occ).sum()),
            'layer_vbm': float(lay_occ_max), 'layer_cbm': cbm_layer,
@@ -182,26 +196,57 @@ if args.stage == 'dos':
            'n_el_above_gap_mid_layer_weighted': n_above_layer,
            'n_el_above_gap_mid_mol_weighted': n_above_mol,
            'n_el_in_layer_CB_states': n_cb_layer_states,
+           'n_el_in_guest_states_near_EF': n_guest_states,
            'x_eff_e_per_ZrNCl': n_cb_layer_states / 10,
+           'guest_e1_band_rel_EF': e1,
            'N_EF_per_cell': nef_tot, 'N_EF_per_ZrNCl': nef_tot / 10,
+           'N_EF_layer_weighted_per_ZrNCl': nef_layer / 10,
+           'N_EF_guest_weighted_per_cell': nef_guest,
            'molecular_levels_occupied_rel_EF': mol_occ[-12:],
            'molecular_levels_empty_rel_EF': mol_emp[:12]}
     if world.rank == 0:
-        np.savez(os.path.join(RESULTS, 'intercalate_dos.npz'), energies=energies,
+        np.savez(os.path.join(RESULTS, f'intercalate_dos{tag}.npz'), energies=energies,
                  dos=dos, keys=list(comp), pdos=np.array(list(comp.values())),
                  ef=ef, eig=eig, wk=wk, occ=occ, frac_mol=frac_mol,
                  wmol=wmol, wlay=wlay)
-        print(json.dumps(res, indent=1))
-    update_json(res)
+        print(json.dumps(res, indent=1), flush=True)
+    return res
+
+
+if args.stage in ('dos', 'dos-from-scf'):
+    if args.stage == 'dos':
+        dos_calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).fixed_density(
+            kpts=KSCF, nbands=NB,
+            symmetry={'point_group': False, 'time_reversal': True},
+            convergence={'bands': NB - 10, 'eigenstates': 1e-5},
+            txt=os.path.join(RUN, 'dos.txt'))
+    update_json(dos_analysis(dos_calc))
+
+# --------------------------------------------------------------------- +U test
+if args.stage == 'scfU':
+    # sensitivity of the guest level / charge split to the Co 3d on-site
+    # interaction (Dudarev U_eff on Co d); same geometry, 6x6x1 mesh
+    atoms = structure()
+    tag = f'_U{args.U:g}'
+    setups = {'Co': f':d,{args.U:g}'} if args.U > 0 else 'paw'
+    atoms.calc = gpaw_calc(os.path.join(RUN, f'scf{tag}.txt'), KAUX, width=WIDTH,
+                           nbands=NB, convergence=dict(CONV, bands=NB - 10),
+                           setups=setups)
+    e = atoms.get_potential_energy()
+    r = dos_analysis(atoms.calc, tag=tag, kmesh=KAUX['size'])
+    r['energy'] = e
+    update_json({f'Ucheck{tag}': r})
 
 # --------------------------------------------------------------------- unfold
 if args.stage == 'unfold':
     atoms = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).get_atoms()
     a_pc = np.linalg.solve(M.astype(float), atoms.cell.array)   # 1x1 cell rows
     kpc, x, ticks, Ksc, Gt = unfold_path(M, a_pc, dens=20)   # ~55 k points
+    # 168 converged bands cover E_F + 2 eV at every k (the top Zr-d bands of a
+    # 180-band run converge very slowly and are not plotted)
     calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).fixed_density(
-        kpts=Ksc, symmetry='off', nbands=NB,
-        convergence={'bands': NB - 10, 'eigenstates': 1e-6},
+        kpts=Ksc, symmetry='off', nbands=180,
+        convergence={'bands': 168, 'eigenstates': 1e-4},   # plotting accuracy
         txt=os.path.join(RUN, 'unfold.txt'))
     lay, mol = layer_mol_indices(atoms)
     e_kn, P_kn, Fmol_kn = unfold_weights(calc, M, Gt, mol_atoms=mol)
@@ -263,7 +308,7 @@ if args.stage == 'fragments':
     for name, idx in [('slab', lay), ('molecule', mol)]:
         frag = atoms[idx]
         frag.calc = gpaw_calc(os.path.join(RUN, f'fragment_{name}.txt'), KSCF,
-                              width=0.05, convergence=CONV, gpts=ref.wfs.gd.N_c)
+                              width=WIDTH, convergence=CONV, gpts=ref.wfs.gd.N_c)
         efrag[name] = frag.get_potential_energy()
         dens[name] = frag.calc.get_all_electron_density(gridrefinement=2)
     drho = dens['total'] - dens['slab'] - dens['molecule']       # e/A^3

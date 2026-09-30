@@ -5,13 +5,15 @@
 02_doped/series.py
 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
 03_intercalate/electronic.py --stage scf
-03_intercalate/electronic.py --stage dos
 03_intercalate/electronic.py --stage unfold
 03_intercalate/electronic.py --stage charges
 03_intercalate/electronic.py --stage spin
+03_intercalate/electronic.py --stage unfold
+03_intercalate/electronic.py --stage scfU --U 0
+03_intercalate/electronic.py --stage scfU --U 4
 03_intercalate/molecule.py
+01_pristine/relax.py --mode pbe
 03_intercalate/electronic.py --stage fragments
 03_intercalate/symmetry_check.py
 01_pristine/convergence_k.py
-01_pristine/relax.py --mode pbe
 01_pristine/relax.py --mode pbed3_cell

@@ -235,7 +235,7 @@ def unfold_weights(calc, M, Gt, mol_atoms=()):
     nk, nb = len(Gt), wfs.bd.nbands
     e_kn, P_kn, F_kn = np.zeros((nk, nb)), np.zeros((nk, nb)), np.zeros((nk, nb))
     Minv = np.linalg.inv(np.asarray(M, float))
-    A = calc.atoms.cell.array
+    A = calc.wfs.gd.cell_cv          # bohr, the units of GPAW's G vectors
     mol_atoms = set(mol_atoms)
     for kpt in wfs.kpt_u:
         k = kpt.k

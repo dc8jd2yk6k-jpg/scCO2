@@ -62,7 +62,17 @@ Doping is modelled in two ways, x electrons per ZrNCl in both cases:
 
 ![doping](figures/doping_rigid_vs_scf.png)
 
-DOPING_TABLE
+| x (e/ZrNCl) | E_F−E_CBM rigid (meV) | E_F−E_CBM SCF (meV) | N(E_F) rigid | N(E_F) SCF | k_F 2D (1/Å) |
+|---|---|---|---|---|---|
+| 0.025 | 100 | 112 | 0.283 | 0.239 | 0.118 |
+| 0.050 | 192 | 209 | 0.282 | 0.278 | 0.167 |
+| 0.100 | 371 | 390 | 0.289 | 0.276 | 0.236 |
+| 0.150 | 542 | 567 | 0.302 | 0.302 | 0.289 |
+| 0.200 | 702 | 731 | 0.324 | 0.330 | 0.334 |
+| 0.300 | 954 | 935 | 1.127 | 1.251 | 0.409 |
+| 0.400 | 1032 | 996 | 1.520 | 1.568 | 0.473 |
+
+N(E_F) in states eV⁻¹ ZrNCl⁻¹ (both spins); self-consistent values from tetrahedron electron counting on the 18×18×2 SCF mesh (at x = 0.10 a 24×24×2 SCF gives 382 meV / 0.281, the dense-mesh result below 378 meV / 0.284).
 
 **Findings.**
 
@@ -85,11 +95,62 @@ DOPING_TABLE
    - The energy drops by 18 meV per cell.
    - The Γ valley moves up to 1.06 eV above the K minimum, while E_F − E_CBM barely changes (398 meV).
 
-X010_DENSE
+**x = 0.10 on the dense mesh.** The SCF used 18×18×3 k-points; the bands and DOS were evaluated on 30×30×3 with the
+tetrahedron method.
+
+| | strict rigid band | extra e⁻ + jellium (frozen lattice) |
+|---|---|---|
+| E_F − E_CBM(K) | 371 meV | 378 meV |
+| N(E_F) (states eV⁻¹ ZrNCl⁻¹, both spins) | 0.289 | 0.284 |
+| gap VBM(Γ) → CBM(K) | 1.772 eV | 1.838 eV |
+| Γ valley above CBM | 0.935 eV | 0.918 eV |
+| in-plane CB mass at K, k_z = 0 (K→Γ / K→M) | 0.85 / 0.68 | 0.83 / 0.66 |
+| k_F (Luttinger, 2 valleys) | 0.236 Å⁻¹ | 0.236 Å⁻¹ |
+
+![x010](figures/x0.10_bands_dos.png)
+![fermi](figures/fermi_surface_x0.10.png)
+
+The Fermi contours of the two descriptions lie on top of each other: two slightly trigonal pockets of radius
+≈ 0.24 Å⁻¹ centred on K and K′. For the occupied states, the rigid band is essentially exact at this doping. What it
+misses is the ≈ 65 meV relative shift of the valence band.
 
 ## 3. The full intercalate ZrNCl{Co(Cp)₂}₀.₁₀
 
-INTERCALATE_RESULTS
+**Model.**
+- Composition: one ZrNCl double layer (10 formula units) plus one Co(Cp)₂ per gallery (51 atoms), i.e. exactly the
+  analysed composition ZrNCl{Co(Cp)₂}₀.₁₀.
+- Cell: basal spacing fixed at the measured 14.7 Å; in-plane √3a × √7a supercell giving 56.3 Å² per guest.
+- Guest orientation: Cp–Co–Cp axis parallel to the layers, as the paper infers from the Cp/Cp′/Cp* series. Along the
+  6.24 Å cell vector the guests interdigitate ring-edge to ring-edge.
+- Relaxation: PBE+D3(BJ), all atoms, residual force 0.021 eV/Å.
+
+**Relaxed geometry** ([figure](figures/structures.png)):
+
+| ZrNCl layer | pristine (PBE+D3) | jellium x = 0.10 (PBE) | in ZrNCl{Co(Cp)₂}₀.₁₀ (PBE+D3) |
+|---|---|---|---|
+| Zr–N (mean of 4) | 2.136 Å | 2.130 Å | 2.131 Å (2.120–2.157) |
+| Zr–Cl (×3) | 2.749 Å | 2.770 Å | 2.780 Å (2.769–2.790) |
+| Cl–Cl slab thickness | 6.199 Å | 6.227 Å | 6.264 Å |
+
+GUEST_TABLE
+
+- The guest shrinks from the neutral-cobaltocene starting geometry (Co–C 2.10 Å) to Co–C = 2.058 Å and
+  Co–(Cp centroid) = 1.659 Å, which is cobaltocenium-like. See the isolated-molecule references in the table.
+- The uppermost and lowermost Cp hydrogens sit in the Cl hollows of the two walls: H···Cl 2.70 Å, Co 4.2 Å above the
+  Cl plane.
+- The host responds as it does to jellium doping, only more strongly:
+  - Zr–Cl lengthens from 2.749 to 2.780 Å (jellium x = 0.10: 2.770 Å).
+  - The Cl–Cl slab thickness grows by 0.065 Å.
+  - Zr–N is unchanged, 2.131 Å on average.
+
+**Electronic structure and charge transfer** (PBE; SCF on 9×9×1 k with 0.02 eV Fermi–Dirac smearing; tetrahedron
+DOS; E_F from electron counting):
+
+![pdos](figures/intercalate_pdos.png)
+
+CHARGE_TRANSFER_TABLE
+
+UNFOLD_TEXT
 
 ## 4. Three levels of description side by side
 
