@@ -33,25 +33,40 @@ sp = hex_special_points_cart(A_EXP, C_EXP)
 
 
 def analyse(atoms, x):
-    """E_F, band edges, N(E_F) (tetrahedron on the SCF mesh) and k_F estimate."""
+    """E_F, band edges, N(E_F) and k_F estimate.
+
+    Two Fermi levels are recorded: GPAW's (Fermi-Dirac 0.02 eV on the SCF
+    mesh) and one from electron counting with the linear-tetrahedron DOS of
+    the same eigenvalues (n_CB(E_F) = 2x per cell), which is far less
+    sensitive to the coarse sampling of the small K/K' pockets.
+    """
     calc = atoms.calc
     ef = calc.get_fermi_level()
     kpts = calc.get_ibz_k_points()
     eig = np.array([calc.get_eigenvalues(kpt=k) for k in range(len(kpts))])
     icb = int(np.argmin(eig[:, 24]))
+    cbm = float(eig[icb, 24])
     kcart = kpts[icb] @ (2 * np.pi * np.linalg.inv(atoms.cell.array).T)
     from gpaw.dos import DOSCalculator
     dc = DOSCalculator.from_calculator(calc, shift_fermi_level=False)
     nef = float(dc.raw_dos([ef], width=0.0)[0])
+    egrid = np.linspace(cbm - 0.05, cbm + 1.6, 1651)
+    dcb = dc.raw_dos(egrid, width=0.0)
+    ncum = np.concatenate([[0], np.cumsum(0.5 * (dcb[1:] + dcb[:-1]) * np.diff(egrid))])
+    ef_t = float(np.interp(2 * x, ncum, egrid))
+    nef_t = float(np.interp(ef_t, egrid, dcb))
     area = np.linalg.norm(np.cross(atoms.cell[0], atoms.cell[1]))
     kK = np.linalg.norm(sp['K'][:2])
     return {'x': x, 'charge': -2 * x, 'energy': atoms.get_potential_energy(),
-            'ef': ef, 'cbm': float(eig[icb, 24]), 'cb2_at_cbm_k': float(eig[icb, 25]),
+            'ef': ef, 'cbm': cbm, 'cb2_at_cbm_k': float(eig[icb, 25]),
             'cbm_k_inplane_over_K': float(np.linalg.norm(kcart[:2]) / kK),
             'vbm': float(eig[:, 23].max()),
-            'ef_minus_cbm': float(ef - eig[icb, 24]),
+            'ef_minus_cbm_FD': float(ef - cbm),
+            'ef_minus_cbm': float(ef_t - cbm),
             'gap_direct_min': float((eig[:, 24] - eig[:, 23]).min()),
-            'N_EF_per_cell': nef, 'N_EF_per_ZrNCl': nef / 2,
+            'gamma_valley_minus_cbm': float(eig[0, 24] - cbm),
+            'N_EF_per_cell': nef_t, 'N_EF_per_ZrNCl': nef_t / 2,
+            'N_EF_FD_per_ZrNCl': nef / 2,
             'kF_2D_parabolic': float(np.sqrt(np.pi * 2 * x / area)),
             'z': z_params(atoms)}
 
@@ -64,8 +79,7 @@ for x in XS:
     atoms.get_potential_energy()
     r = analyse(atoms, x)
     res['frozen'].append(r)
-    if abs(x - 0.10) < 1e-9:
-        atoms.calc.write(os.path.join(RUN, 'x0.100.gpw'))
+    atoms.calc.write(os.path.join(RUN, f'x{x:.3f}.gpw'))
     if world.rank == 0:
         print({k: (round(v, 5) if isinstance(v, float) else v) for k, v in r.items()}, flush=True)
         save_json('doped_series.json', res)

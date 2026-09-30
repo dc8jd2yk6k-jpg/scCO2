@@ -66,6 +66,13 @@ def main():
         jel = [r for r in json.load(open(p))['frozen'] if r['x'] > 0]
         out['jellium'] = [{k: r[k] for k in ('x', 'ef_minus_cbm', 'N_EF_per_ZrNCl')}
                           for r in jel]
+    dense = None
+    p = os.path.join(RES, 'x0.10_electronic.json')
+    if os.path.exists(p):
+        dense = json.load(open(p))
+        out['jellium_x0.10_dense'] = {k: dense.get(k) for k in (
+            'ef_tetra_minus_cbm', 'ef_dos_minus_cbm', 'N_EF_tetra_per_ZrNCl',
+            'gamma_valley_minus_cbm', 'kdos')}
     inter = None
     p = os.path.join(RES, 'intercalate_electronic.json')
     if os.path.exists(p):
@@ -75,16 +82,23 @@ def main():
         json.dump(out, f, indent=2)
 
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
-    xs = np.linspace(0.002, 0.5, 400)
+    xs = np.linspace(0.01, 0.5, 400)
     ef_abs = np.interp(xs, xx, ee)
     a1.plot(xs, 1e3 * (ef_abs - cbm), color=BLUE, label='rigid band (pristine DOS)')
     a2.plot(xs, np.interp(ef_abs, ee, dd) / 2, color=BLUE,
             label='rigid band (pristine DOS)')
     if jel:
+        lab = 'extra e⁻ + jellium (SCF mesh)'
         a1.plot([r['x'] for r in jel], [1e3 * r['ef_minus_cbm'] for r in jel], 'o',
-                ms=6, mfc=ORANGE, mec='white', mew=1.5, label='extra e⁻ + jellium (SCF)')
+                ms=6, mfc=ORANGE, mec='white', mew=1.5, label=lab)
         a2.plot([r['x'] for r in jel], [r['N_EF_per_ZrNCl'] for r in jel], 'o',
-                ms=6, mfc=ORANGE, mec='white', mew=1.5, label='extra e⁻ + jellium (SCF)')
+                ms=6, mfc=ORANGE, mec='white', mew=1.5, label=lab)
+    if dense and 'ef_tetra_minus_cbm' in dense:
+        lab = 'extra e⁻ + jellium, dense mesh'
+        a1.plot([0.10], [1e3 * dense['ef_tetra_minus_cbm']], 's', ms=7, mfc=ORANGE,
+                mec=INK, mew=1.0, label=lab)
+        a2.plot([0.10], [dense['N_EF_tetra_per_ZrNCl']], 's', ms=7, mfc=ORANGE,
+                mec=INK, mew=1.0, label=lab)
     if inter and 'ef_minus_cbm_layer' in inter:
         a1.plot([0.10], [1e3 * inter['ef_minus_cbm_layer']], 'D', ms=7, mfc=AQUA,
                 mec='white', mew=1.5, label='ZrNCl{Co(Cp)₂}₀.₁₀')
@@ -92,7 +106,7 @@ def main():
             a2.plot([0.10], [inter['N_EF_per_ZrNCl']], 'D', ms=7, mfc=AQUA,
                     mec='white', mew=1.5, label='ZrNCl{Co(Cp)₂}₀.₁₀')
     for a in (a1, a2):
-        a.axvline(0.10, color=GRID, lw=5, zorder=0)
+        a.axvline(0.10, color=GRID, lw=5, zorder=0)   # x of ZrNCl{Co(Cp)2}0.10
         a.set_xlabel('x (electrons per ZrNCl)')
         a.set_xlim(0, 0.5)
         a.grid(True, axis='y')
@@ -100,8 +114,7 @@ def main():
     a2.set_ylabel('N(E$_F$) (states/eV/ZrNCl)')
     a2.set_ylim(0, None)
     a1.legend(loc='upper left')
-    a2.legend(loc='lower right')
-    a1.text(0.105, a1.get_ylim()[1] * 0.93, 'x = 0.10', color=INK2, fontsize=8)
+    a2.legend(loc='upper left')
     fig.tight_layout()
     fig.savefig(os.path.join(FIG, 'doping_rigid_vs_scf.png'), bbox_inches='tight')
     print(json.dumps(out, indent=1))

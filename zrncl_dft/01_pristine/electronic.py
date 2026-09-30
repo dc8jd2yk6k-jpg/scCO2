@@ -111,7 +111,19 @@ res = {'tag': args.tag, 'charge_per_cell': args.charge,
        'ef_scf': ef_scf, 'ef_dos': ef_dos, 'n_electrons': nel,
        'vbm_dense': float(vbm), 'cbm_dense': float(cbm), 'gap_dense': float(cbm - vbm),
        'kscf': args.kscf, 'kdos': args.kdos}
-if args.charge == 0:
+if args.charge != 0:
+    # Fermi level by electron counting with the tetrahedron DOS (n_CB = 2x per cell)
+    xdop = -args.charge / 2
+    egrid = np.linspace(cbm - 0.05, cbm + 1.6, 1651)
+    dcb = dc.raw_dos(egrid, width=0.0)
+    ncum = np.concatenate([[0], np.cumsum(0.5 * (dcb[1:] + dcb[:-1]) * np.diff(egrid))])
+    ef_t = float(np.interp(2 * xdop, ncum, egrid))
+    res['ef_tetra'] = ef_t
+    res['ef_tetra_minus_cbm'] = ef_t - float(cbm)
+    res['ef_dos_minus_cbm'] = float(ef_dos - cbm)
+    res['N_EF_tetra_per_ZrNCl'] = float(np.interp(ef_t, egrid, dcb)) / 2
+    res['gamma_valley_minus_cbm'] = float(eig_dense[0, nval] - cbm)
+else:
     g, p1, p2 = bandgap(dos, output=None)
     res['bandgap_ase'] = g
     res['vbm_k'] = dos.get_ibz_k_points()[p1[1]].tolist()

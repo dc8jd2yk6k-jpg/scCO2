@@ -15,3 +15,7 @@
 2026-09-30 11:55:38 START [3] 03_intercalate/relax.py --stage pw
 2026-09-30 13:24:14 END   [3] rc=0 03_intercalate/relax.py --stage pw
 2026-09-30 13:24:14 START [4] 02_doped/series.py
+2026-09-30 13:45:26 ABORT [4] restart series with tetrahedron E_F + per-x gpw
+2026-09-30 13:45:26 START [4] 02_doped/series.py
+2026-09-30 15:50:54 END   [4] rc=0 02_doped/series.py
+2026-09-30 15:50:54 START [5] 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3

@@ -46,7 +46,10 @@ def structure_info(atoms):
 
 def frontier(calc, spin):
     out = {}
-    ef = calc.get_fermi_level()
+    try:
+        ef = calc.get_fermi_level()
+    except Exception:            # fixed magnetic moment -> one Fermi level per spin
+        ef = np.mean(calc.get_fermi_levels())
     for s in range(2 if spin else 1):
         e = calc.get_eigenvalues(spin=s)
         f = calc.get_occupation_numbers(spin=s)

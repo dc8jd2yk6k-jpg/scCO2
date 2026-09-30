@@ -48,7 +48,31 @@ PRISTINE_STRUCTURE_TABLE
   - The k_z-averaged density of states corresponds to a **DOS mass m*_DOS = 0.58 mₑ**, i.e. N_CB = 0.27–0.29
     states eV⁻¹ ZrNCl⁻¹ just above the CBM.
 
-RESULTS_REST
+## 2. Electron-doped β-ZrNCl: rigid band vs. extra electrons
+
+Doping is modelled in two ways, x electrons per ZrNCl in both cases:
+
+- **Strict rigid band.** The pristine bands are frozen and E_F is moved until the conduction band holds x electrons.
+  E_F comes from electron counting with the tetrahedron DOS on the dense 30×30×3 mesh.
+- **Extra electrons with a jellium background.** The calculation is self-consistent with −2x electrons per Zr₂N₂Cl₂.
+  The bands relax around the added charge, which sits on a uniform positive background.
+  - Run on a series of x values with the 18×18×2 SCF mesh.
+  - At x = 0.10 it is repeated with the full band/DOS treatment (dense 30×30×3 mesh), because that is the doping
+    level of ZrNCl{Co(Cp)₂}₀.₁₀.
+
+DOPED_RESULTS
+
+## 3. The full intercalate ZrNCl{Co(Cp)₂}₀.₁₀
+
+INTERCALATE_RESULTS
+
+## 4. Three levels of description side by side
+
+COMPARISON
+
+## 5. What this says about the paper's observations
+
+DISCUSSION
 
 ## Caveats
 
