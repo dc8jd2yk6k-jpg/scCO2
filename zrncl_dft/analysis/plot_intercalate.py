@@ -1,6 +1,6 @@
-"""Figures for the ZrNCl{Co(Cp)2}0.10 model: structure, PDOS, unfolded bands,
-plane-averaged density difference.  Each panel is skipped if its data file
-is missing.
+"""Figures for the ZrNCl{Co(Cp)2}0.10 model: PDOS, unfolded bands and the
+plane-averaged density difference (structure panels: plot_structures.py).
+Each panel is skipped if its data file is missing.
 
 Usage: python analysis/plot_intercalate.py
 """
@@ -27,27 +27,6 @@ def smooth(y, e, width=0.05):
     n = int(4 * width / de)
     k = np.exp(-0.5 * (np.arange(-n, n + 1) * de / width) ** 2)
     return np.convolve(y, k / k.sum(), mode='same')
-
-
-def structure():
-    from ase.io import read, write
-    for name in ('relaxed_pw.traj', 'relaxed_lcao.traj', 'start.traj'):
-        f = os.path.join(RUN, name)
-        if os.path.exists(f):
-            at = read(f)
-            break
-    else:
-        return
-    big = at.repeat((2, 2, 2))
-    write(os.path.join(FIG, 'intercalate_side.png'), big, rotation='-90x',
-          radii=0.45, scale=30)
-    top = at.repeat((3, 3, 1))
-    mol = [i for i in range(len(top)) if top[i].symbol in ('Co', 'C', 'H')
-           or top[i].position[2] > at.cell[2, 2] * 0.5 + 2.5]
-    write(os.path.join(FIG, 'intercalate_top.png'), top[mol + [i for i in range(len(top))
-          if top[i].symbol == 'Cl' and top[i].position[2] > at.cell[2, 2] * 0.5]],
-          rotation='0x', radii=0.45, scale=30)
-    print('wrote structure images from', name)
 
 
 def pdos():
@@ -160,7 +139,6 @@ def drho():
 
 
 if __name__ == '__main__':
-    structure()
     pdos()
     unfold()
     drho()

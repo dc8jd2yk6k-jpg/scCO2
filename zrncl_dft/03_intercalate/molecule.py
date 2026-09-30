@@ -26,7 +26,7 @@ os.makedirs(RUN, exist_ok=True)
 def calc(tag, charge, spin):
     return GPAW(mode='fd', h=0.18, xc=XC, charge=charge, spinpol=spin,
                 occupations=FermiDirac(0.01, fixmagmom=spin),
-                convergence={'energy': 1e-6, 'density': 1e-6},
+                convergence={'energy': 1e-6, 'density': 1e-5},
                 txt=os.path.join(RUN, f'{tag}.txt'))
 
 

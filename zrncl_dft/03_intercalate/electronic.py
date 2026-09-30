@@ -24,7 +24,7 @@ from gpaw import GPAW
 from gpaw.mpi import world
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common import gpaw_calc, RESULTS, ROOT  # noqa: E402
+from common import gpaw_calc, unfold_path, unfold_weights, RESULTS, ROOT  # noqa: E402
 
 p = argparse.ArgumentParser()
 p.add_argument('--stage', required=True,
@@ -182,84 +182,36 @@ if args.stage == 'dos':
 
 # --------------------------------------------------------------------- unfold
 if args.stage == 'unfold':
-    from gpaw.unfold import find_K_from_k
     atoms = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).get_atoms()
-    # primitive (1x1) in-plane path G-M-K-G, reduced PC coordinates
-    pts = {'G': np.array([0, 0, 0.]), 'M': np.array([0.5, 0, 0.]),
-           'K': np.array([1 / 3, 1 / 3, 0.])}
-    a_pc = np.linalg.solve(M.astype(float), atoms.cell.array)   # PC cell rows
-    b_pc = 2 * np.pi * np.linalg.inv(a_pc).T
-    path = ['G', 'M', 'K', 'G']
-    kpc, x, ticks = [], [], [0.0]
-    x0 = 0.0
-    for s, t in zip(path[:-1], path[1:]):
-        L = np.linalg.norm((pts[t] - pts[s]) @ b_pc)
-        n = max(int(round(L * 45)), 4)
-        for i in range(n):
-            kpc.append(pts[s] + (pts[t] - pts[s]) * i / n)
-            x.append(x0 + L * i / n)
-        x0 += L
-        ticks.append(x0)
-    kpc.append(pts['G'])
-    x.append(x0)
-    kpc = np.array(kpc)
-    KG = [find_K_from_k(k, M) for k in kpc]
-    Ksc = np.array([K for K, G in KG])
-    Gt = np.array([G for K, G in KG])
+    a_pc = np.linalg.solve(M.astype(float), atoms.cell.array)   # 1x1 cell rows
+    kpc, x, ticks, Ksc, Gt = unfold_path(M, a_pc)
     calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).fixed_density(
-        kpts=Ksc, symmetry='off', nbands=NB, convergence={'bands': NB - 10, 'eigenstates': 1e-6},
+        kpts=Ksc, symmetry='off', nbands=NB,
+        convergence={'bands': NB - 10, 'eigenstates': 1e-6},
         txt=os.path.join(RUN, 'unfold.txt'))
-    wfs = calc.wfs
-    nk = len(Ksc)
-    e_kn = np.zeros((nk, NB))
-    P_kn = np.zeros((nk, NB))
-    Fmol_kn = np.zeros((nk, NB))
     lay, mol = layer_mol_indices(atoms)
-    Minv = np.linalg.inv(M.astype(float))
-    A = atoms.cell.array
-    for kpt in wfs.kpt_u:
-        k = kpt.k
-        G_Gv = wfs.pd.get_reciprocal_vectors(q=kpt.q, add_q=False)
-        G_Gc = np.rint(G_Gv @ A.T / (2 * np.pi)).astype(int)
-        n_Gc = (G_Gc - Gt[k]) @ Minv.T
-        mask = np.all(np.abs(n_Gc - np.rint(n_Gc)) < 1e-6, axis=1)
-        C_nG = kpt.psit_nG[:]
-        norm = (np.abs(C_nG) ** 2).sum(1)
-        wfs.pd.gd.comm.sum(norm)
-        part = (np.abs(C_nG[:, mask]) ** 2).sum(1)
-        wfs.pd.gd.comm.sum(part)
-        wm = np.zeros(len(part))
-        wl = np.zeros(len(part))
-        for a, P_ni in kpt.projections.items():
-            w = (np.abs(P_ni) ** 2).sum(1)
-            if a in mol:
-                wm += w
-            else:
-                wl += w
-        if wfs.pd.gd.comm.rank == 0 and wfs.bd.comm.rank == 0:
-            P_kn[k, :len(part)] = part / norm
-            e_kn[k] = kpt.eps_n * 27.211386245988
-            Fmol_kn[k, :len(part)] = wm / np.maximum(wm + wl, 1e-12)
-    wfs.kd.comm.sum(P_kn)
-    wfs.kd.comm.sum(e_kn)
-    wfs.kd.comm.sum(Fmol_kn)
+    e_kn, P_kn, Fmol_kn = unfold_weights(calc, M, Gt, mol_atoms=mol)
     ef = calc.get_fermi_level()
     if world.rank == 0:
-        np.savez(os.path.join(RESULTS, 'intercalate_unfold.npz'), x=np.array(x),
-                 ticks=np.array(ticks), labels=np.array(path), e_kn=e_kn, P_kn=P_kn,
-                 Fmol_kn=Fmol_kn, ef=ef, kpc=kpc)
+        np.savez(os.path.join(RESULTS, 'intercalate_unfold.npz'), x=x,
+                 ticks=np.array(ticks), labels=np.array(['G', 'M', 'K', 'G']),
+                 e_kn=e_kn, P_kn=P_kn, Fmol_kn=Fmol_kn, ef=ef, kpc=kpc)
 
 # --------------------------------------------------------------------- charges
 if args.stage == 'charges':
     calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None)
     atoms = calc.get_atoms()
     lay, mol = layer_mol_indices(atoms)
-    from gpaw.analyse.hirshfeld import HirshfeldPartitioning
-    hq = np.asarray(HirshfeldPartitioning(calc).get_charges())
+    res = {}
+    try:
+        from gpaw.analyse.hirshfeld import HirshfeldPartitioning
+        hq = np.asarray(HirshfeldPartitioning(calc).get_charges())
+        res['hirshfeld'] = {'per_atom': [float(q) for q in hq],
+                            'molecule': float(np.sum(hq[mol])),
+                            'layer': float(np.sum(hq[lay]))}
+    except Exception as err:          # Hirshfeld helper is real-space oriented
+        res['hirshfeld_error'] = repr(err)
     rho = calc.get_all_electron_density(gridrefinement=2)       # e/A^3, incl. core
-    res = {'hirshfeld': {'per_atom': [float(q) for q in hq],
-                         'molecule': float(np.sum(hq[mol])),
-                         'layer': float(np.sum(hq[lay]))}}
     if world.rank == 0:
         np.save(os.path.join(RUN, 'rho_ae.npy'), rho)
         from pybader.interface import Bader
@@ -269,9 +221,9 @@ if args.stage == 'charges':
         info = {'filename': 'rho_ae', 'prefix': RUN, 'file_type': 'gpaw',
                 'write_function': cube_write,
                 'elements': atoms.get_atomic_numbers(), 'voxel_offset': np.zeros(3)}
-        bader = Bader({'charge': np.ascontiguousarray(rho * vol)}, lat,
+        bader = Bader({'charge': np.ascontiguousarray(rho)}, lat,   # e/A^3
                       np.ascontiguousarray(atoms.positions, dtype=float), info,
-                      threads=4, export_mode=None)
+                      threads=4, export_mode=None, output='none')
         bader()
         nb = np.asarray(bader.atoms_charge)                     # electrons per atom
         Z = atoms.get_atomic_numbers()

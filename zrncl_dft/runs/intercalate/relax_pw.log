@@ -1,1 +1,4 @@
 PreconLBFGS:   0  10:29:01     -373.126118       0.5977
+PreconLBFGS:   1  10:59:00     -373.242458       0.4342
+PreconLBFGS:   2  11:08:14     -373.263945       0.6510
+ForceConsistentPreconLBFGS:   0  11:23:40     -373.263968       0.6508

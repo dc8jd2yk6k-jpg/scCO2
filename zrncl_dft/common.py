@@ -198,6 +198,72 @@ def gpaw_calc(txt, kpts, ecut=ECUT, width=0.01, charge=0.0, spin=False,
     return GPAW(**params)
 
 
+# --- band unfolding -----------------------------------------------------------
+def unfold_path(M, a_pc, labels=('G', 'M', 'K', 'G'), dens=45):
+    """Primitive-cell k path (reduced PC coords), x axis, ticks, and the
+    corresponding supercell k points K (reduced SC coords) with the integer
+    shifts G_t such that M k = K + G_t (gpaw.unfold.find_K_from_k)."""
+    from gpaw.unfold import find_K_from_k
+    pts = {'G': np.array([0, 0, 0.]), 'M': np.array([0.5, 0, 0.]),
+           'K': np.array([1 / 3, 1 / 3, 0.])}
+    b_pc = 2 * np.pi * np.linalg.inv(a_pc).T
+    kpc, x, ticks, x0 = [], [], [0.0], 0.0
+    for s, t in zip(labels[:-1], labels[1:]):
+        L = np.linalg.norm((pts[t] - pts[s]) @ b_pc)
+        n = max(int(round(L * dens)), 4)
+        for i in range(n):
+            kpc.append(pts[s] + (pts[t] - pts[s]) * i / n)
+            x.append(x0 + L * i / n)
+        x0 += L
+        ticks.append(x0)
+    kpc.append(pts[labels[-1]])
+    x.append(x0)
+    kpc = np.array(kpc)
+    KG = [find_K_from_k(k, M) for k in kpc]
+    return kpc, np.array(x), ticks, np.array([K for K, G in KG]), \
+        np.array([G for K, G in KG])
+
+
+def unfold_weights(calc, M, Gt, mol_atoms=()):
+    """Spectral weights P_n(k) = sum_{g in PC lattice} |C_n(k - K + g)|^2 of the
+    supercell pseudo wave functions (PW coefficients), for a calculator whose
+    k-point list is the unfolding list K (one per PC k, symmetry off).
+
+    Also returns eigenvalues (eV) and the fraction of PAW-projector weight on
+    `mol_atoms`.  Collective over the calculator's communicators."""
+    wfs = calc.wfs
+    nk, nb = len(Gt), wfs.bd.nbands
+    e_kn, P_kn, F_kn = np.zeros((nk, nb)), np.zeros((nk, nb)), np.zeros((nk, nb))
+    Minv = np.linalg.inv(np.asarray(M, float))
+    A = calc.atoms.cell.array
+    mol_atoms = set(mol_atoms)
+    for kpt in wfs.kpt_u:
+        k = kpt.k
+        G_Gv = wfs.pd.get_reciprocal_vectors(q=kpt.q, add_q=False)
+        G_Gc = np.rint(G_Gv @ A.T / (2 * np.pi)).astype(int)
+        n_Gc = (G_Gc - Gt[k]) @ Minv.T
+        mask = np.all(np.abs(n_Gc - np.rint(n_Gc)) < 1e-6, axis=1)
+        C_nG = kpt.psit_nG[:]
+        norm = (np.abs(C_nG) ** 2).sum(1)
+        part = (np.abs(C_nG[:, mask]) ** 2).sum(1)
+        wfs.pd.gd.comm.sum(norm)
+        wfs.pd.gd.comm.sum(part)
+        wm, wl = np.zeros(len(part)), np.zeros(len(part))
+        for a, P_ni in kpt.projections.items():
+            w = (np.abs(P_ni) ** 2).sum(1)
+            if a in mol_atoms:
+                wm += w
+            else:
+                wl += w
+        if wfs.pd.gd.comm.rank == 0 and wfs.bd.comm.rank == 0:
+            P_kn[k, :len(part)] = part / norm
+            e_kn[k] = kpt.eps_n * 27.211386245988
+            F_kn[k, :len(part)] = wm / np.maximum(wm + wl, 1e-12)
+    for arr in (P_kn, e_kn, F_kn):
+        wfs.kd.comm.sum(arr)
+    return e_kn, P_kn, F_kn
+
+
 # --- k-space helpers --------------------------------------------------------
 def hex_special_points_cart(a=A_EXP, c=C_EXP):
     """Cartesian special points of the 2D hexagonal BZ (kz=0) plus A, in 1/A."""
