@@ -11,7 +11,8 @@
 |---|---|
 | band gap (indirect, dense mesh) | 1.772 eV |
 | smallest direct gap | 2.109 eV |
-| CB effective mass at K (K→Γ / K→M) | 0.854 / 0.682 m_e |
+| CB curvature mass at K, k_z = 0 (K→Γ / K→M) | 0.854 / 0.682 m_e |
+| CB density-of-states mass (k_z-averaged) | 0.583 m_e |
 | CB kz dispersion at K (E(K,Z) − E(K,0)) | -0.1 meV |
 | VB kz dispersion at Γ (E(Z) − E(Γ)) | -256.8 meV |
 
@@ -31,4 +32,4 @@
 | 0.400 | 1032 | — | 1.520 | — | — |
 | 0.500 | 1093 | — | 1.676 | — | — |
 
-N(E_F) in states/eV/ZrNCl (both spins).  2D parabolic estimate with m* = 0.768: 0.361 states/eV/ZrNCl.
+N(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS 0.274 states/eV/ZrNCl ⇒ m*_DOS = 0.58 m_e (k_z = 0 in-plane curvature: 0.77 m_e).

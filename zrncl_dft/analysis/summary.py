@@ -56,7 +56,9 @@ if el:
     out.append(f"| band gap (indirect, dense mesh) | {el['gap_dense']:.3f} eV |")
     if 'direct_gap_min' in el:
         out.append(f"| smallest direct gap | {el['direct_gap_min']:.3f} eV |")
-    out.append(f"| CB effective mass at K (K→Γ / K→M) | {m['K-G']:.3f} / {m['K-M']:.3f} m_e |")
+    out.append(f"| CB curvature mass at K, k_z = 0 (K→Γ / K→M) | {m['K-G']:.3f} / {m['K-M']:.3f} m_e |")
+    if rb:
+        out.append(f"| CB density-of-states mass (k_z-averaged) | {rb['m_dos']:.3f} m_e |")
     out.append(f"| CB kz dispersion at K (E(K,Z) − E(K,0)) | "
                f"{1e3 * (kz['CB_K(kz=Z)'] - kz['CB_K(kz=0)']):.1f} meV |")
     out.append(f"| VB kz dispersion at Γ (E(Z) − E(Γ)) | "
@@ -76,8 +78,9 @@ if rb:
                    f"{f(1e3 * j['ef_minus_cbm'], '.0f') if j else '—'} | "
                    f"{r['N_EF_per_ZrNCl']:.3f} | {f(j['N_EF_per_ZrNCl']) if j else '—'} | "
                    f"{f(j['kF_2D_parabolic']) if j else '—'} |")
-    out.append('\nN(E_F) in states/eV/ZrNCl (both spins).  2D parabolic estimate with '
-               f"m* = {rb['m_eff_avg']:.3f}: {rb['N2D_parabolic_per_ZrNCl']:.3f} states/eV/ZrNCl.\n")
+    out.append('\nN(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS '
+               f"{rb['N_CB_bottom_per_ZrNCl']:.3f} states/eV/ZrNCl ⇒ m*_DOS = {rb['m_dos']:.2f} m_e "
+               f"(k_z = 0 in-plane curvature: {rb['m_eff_avg']:.2f} m_e).\n")
 
 if mol:
     out.append('### Isolated Co(Cp)₂ and Co(Cp)₂⁺ (PBE, FD, open boundaries)\n')

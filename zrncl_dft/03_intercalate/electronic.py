@@ -184,7 +184,7 @@ if args.stage == 'dos':
 if args.stage == 'unfold':
     atoms = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).get_atoms()
     a_pc = np.linalg.solve(M.astype(float), atoms.cell.array)   # 1x1 cell rows
-    kpc, x, ticks, Ksc, Gt = unfold_path(M, a_pc)
+    kpc, x, ticks, Ksc, Gt = unfold_path(M, a_pc, dens=20)   # ~55 k points
     calc = GPAW(os.path.join(RUN, 'scf.gpw'), txt=None).fixed_density(
         kpts=Ksc, symmetry='off', nbands=NB,
         convergence={'bands': NB - 10, 'eigenstates': 1e-6},
@@ -261,8 +261,18 @@ if args.stage == 'fragments':
     prof = drho.mean(axis=(0, 1)) * area                         # e/A
     cdc = np.cumsum(prof) * dz                                   # e
     e0 = json.load(open(os.path.join(RESULTS, 'intercalate_electronic.json')))['energy_nonspin']
-    update_json({'E_bind_frozen_frags_PBE': e0 - efrag['slab'] - efrag['molecule'],
-                 'E_fragments': efrag})
+    from dftd3.ase import DFTD3
+    ed3 = {}
+    for name, sub in [('total', atoms), ('slab', atoms[lay]), ('molecule', atoms[mol])]:
+        sub = sub.copy()
+        sub.calc = DFTD3(method='PBE', damping='d3bj')
+        ed3[name] = sub.get_potential_energy()
+    e_int_pbe = e0 - efrag['slab'] - efrag['molecule']
+    e_int_d3 = ed3['total'] - ed3['slab'] - ed3['molecule']
+    update_json({'E_int_frozen_frags_PBE': e_int_pbe,
+                 'E_int_frozen_frags_D3_part': e_int_d3,
+                 'E_int_frozen_frags_PBE_D3': e_int_pbe + e_int_d3,
+                 'E_fragments': efrag, 'E_D3': ed3})
     if world.rank == 0:
         np.savez(os.path.join(RESULTS, 'intercalate_drho.npz'), z=z, drho_z=prof,
                  cdc=cdc, zatoms=atoms.positions[:, 2],

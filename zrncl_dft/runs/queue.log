@@ -11,3 +11,7 @@
 2026-09-30 10:12:45 START [3] 03_intercalate/relax.py --stage pw
 2026-09-30 11:09:53 ABORT [3] restart relaxation: SCF density tol 1e-4 + force-consistent line search
 2026-09-30 11:09:53 START [3] 03_intercalate/relax.py --stage pw
+2026-09-30 11:55:38 ABORT [3] PreconLBFGS backtracking (6 SCF for 1 step); switch to BFGS maxstep 0.1
+2026-09-30 11:55:38 START [3] 03_intercalate/relax.py --stage pw
+2026-09-30 13:24:14 END   [3] rc=0 03_intercalate/relax.py --stage pw
+2026-09-30 13:24:14 START [4] 02_doped/series.py

@@ -1,36 +1,36 @@
 {
-  "structure": "runs/intercalate/start.traj",
+  "structure": "runs/intercalate/relaxed_pw.traj",
   "CoCp2": {
-    "Co-C_mean": 2.1000000000000005,
-    "Co-C_min": 2.1,
-    "Co-C_max": 2.1000000000000005,
-    "Co-centroid": 1.7118108713526352,
-    "C-C_mean": 1.43,
-    "axis_angle_to_layer_plane_deg": 0.0,
+    "Co-C_mean": 2.0576159492153927,
+    "Co-C_min": 2.057037320296219,
+    "Co-C_max": 2.059441121822909,
+    "Co-centroid": 1.6588037760177459,
+    "C-C_mean": 1.4311856733657304,
+    "axis_angle_to_layer_plane_deg": 5.916963460984683e-05,
     "ring_normal_vs_axis_deg": [
-      0.0,
-      0.0
+      0.0703500537963132,
+      0.07290693035448963
     ]
   },
   "host": {
-    "Zr-N_mean": 2.1361890691264382,
-    "Zr-N_min": 2.1287192054945416,
-    "Zr-N_max": 2.158598660022122,
-    "Zr-Cl_mean": 2.7492793544752527,
-    "Zr-Cl_min": 2.7492793544752514,
-    "Zr-Cl_max": 2.7492793544752545,
-    "Cl-Cl_slab_thickness": 6.199300692826376,
-    "Zr-Zr_interplane": 2.6062574614635627
+    "Zr-N_mean": 2.1306060304106524,
+    "Zr-N_min": 2.119674472678486,
+    "Zr-N_max": 2.1567853744942713,
+    "Zr-Cl_mean": 2.7799575373682703,
+    "Zr-Cl_min": 2.768988944275391,
+    "Zr-Cl_max": 2.7896148014826685,
+    "Cl-Cl_slab_thickness": 6.264484502533747,
+    "Zr-Zr_interplane": 2.5789404314121955
   },
   "contacts": {
-    "C...Cl": 3.609276494617103,
-    "C...H (guest-guest)": 3.038139543730147,
-    "H...Cl": 2.7669427931103994,
-    "H...C (guest-guest)": 3.038139543730147,
-    "H...H (guest-guest)": 2.4752443451653483,
-    "H...Zr": 3.869077509131523
+    "C...Cl": 3.578601680009245,
+    "C...H (guest-guest)": 3.0422193042892043,
+    "H...Cl": 2.701878214036744,
+    "H...C (guest-guest)": 3.0422193042892043,
+    "H...H (guest-guest)": 2.502656092464389,
+    "H...Zr": 3.895590047070733
   },
-  "Co_height_above_top_Cl_plane": 4.250349307173624,
+  "Co_height_above_top_Cl_plane": 4.215218637035477,
   "start": {
     "CoCp2": {
       "Co-C_mean": 2.1000000000000005,

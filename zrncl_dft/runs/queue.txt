@@ -11,6 +11,7 @@
 03_intercalate/electronic.py --stage spin
 03_intercalate/molecule.py
 03_intercalate/electronic.py --stage fragments
+03_intercalate/symmetry_check.py
 01_pristine/convergence_k.py
 01_pristine/relax.py --mode pbe
 01_pristine/relax.py --mode pbed3_cell
