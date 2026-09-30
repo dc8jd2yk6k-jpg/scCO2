@@ -1,0 +1,65 @@
+{
+  "cbm": 7.560562942781921,
+  "m_eff_avg": 0.7678787560019016,
+  "N2D_parabolic_per_ZrNCl": 0.3609398859788852,
+  "N_CB_bottom_per_ZrNCl": 0.2739452111709934,
+  "m_dos": 0.5828026110114258,
+  "note": "m_eff_avg is the kz=0 in-plane curvature at K; interlayer hopping vanishes at K but grows ~|k-K| away from it, so the kz-averaged (DOS) mass m_dos is the relevant one for N(E_F).",
+  "rigid_band": [
+    {
+      "x": 0.025,
+      "ef_minus_cbm": 0.09962090076540342,
+      "N_EF_per_ZrNCl": 0.28347494317071753
+    },
+    {
+      "x": 0.05,
+      "ef_minus_cbm": 0.1922235826562675,
+      "N_EF_per_ZrNCl": 0.2824692995652308
+    },
+    {
+      "x": 0.075,
+      "ef_minus_cbm": 0.28258018528629414,
+      "N_EF_per_ZrNCl": 0.2749038512466231
+    },
+    {
+      "x": 0.1,
+      "ef_minus_cbm": 0.3710286399813052,
+      "N_EF_per_ZrNCl": 0.28874358673773415
+    },
+    {
+      "x": 0.125,
+      "ef_minus_cbm": 0.45744255201879724,
+      "N_EF_per_ZrNCl": 0.29100955136065537
+    },
+    {
+      "x": 0.15,
+      "ef_minus_cbm": 0.5418790307098114,
+      "N_EF_per_ZrNCl": 0.30170054972464877
+    },
+    {
+      "x": 0.2,
+      "ef_minus_cbm": 0.7016052398311281,
+      "N_EF_per_ZrNCl": 0.3244274076015245
+    },
+    {
+      "x": 0.25,
+      "ef_minus_cbm": 0.8493957186400127,
+      "N_EF_per_ZrNCl": 0.36061899789894925
+    },
+    {
+      "x": 0.3,
+      "ef_minus_cbm": 0.9539486844153942,
+      "N_EF_per_ZrNCl": 1.1270269347719362
+    },
+    {
+      "x": 0.4,
+      "ef_minus_cbm": 1.0319874921418073,
+      "N_EF_per_ZrNCl": 1.5195499482406278
+    },
+    {
+      "x": 0.5,
+      "ef_minus_cbm": 1.0926584587489376,
+      "N_EF_per_ZrNCl": 1.676164718794776
+    }
+  ]
+}

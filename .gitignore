@@ -1,0 +1,7 @@
+# large binary restart / density files produced by the DFT runs
+*.gpw
+*.npy
+*.pckl
+zrncl_dft/runs/img/
+__pycache__/
+*.pyc

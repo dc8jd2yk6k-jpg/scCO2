@@ -1,0 +1,58 @@
+{
+  "structure": "runs/intercalate/start.traj",
+  "CoCp2": {
+    "Co-C_mean": 2.1000000000000005,
+    "Co-C_min": 2.1,
+    "Co-C_max": 2.1000000000000005,
+    "Co-centroid": 1.7118108713526352,
+    "C-C_mean": 1.43,
+    "axis_angle_to_layer_plane_deg": 0.0,
+    "ring_normal_vs_axis_deg": [
+      0.0,
+      0.0
+    ]
+  },
+  "host": {
+    "Zr-N_mean": 2.1361890691264382,
+    "Zr-N_min": 2.1287192054945416,
+    "Zr-N_max": 2.158598660022122,
+    "Zr-Cl_mean": 2.7492793544752527,
+    "Zr-Cl_min": 2.7492793544752514,
+    "Zr-Cl_max": 2.7492793544752545,
+    "Cl-Cl_slab_thickness": 6.199300692826376,
+    "Zr-Zr_interplane": 2.6062574614635627
+  },
+  "contacts": {
+    "C...Cl": 3.609276494617103,
+    "C...H (guest-guest)": 3.038139543730147,
+    "H...Cl": 2.7669427931103994,
+    "H...C (guest-guest)": 3.038139543730147,
+    "H...H (guest-guest)": 2.4752443451653483,
+    "H...Zr": 3.869077509131523
+  },
+  "Co_height_above_top_Cl_plane": 4.250349307173624,
+  "start": {
+    "CoCp2": {
+      "Co-C_mean": 2.1000000000000005,
+      "Co-C_min": 2.1,
+      "Co-C_max": 2.1000000000000005,
+      "Co-centroid": 1.7118108713526352,
+      "C-C_mean": 1.43,
+      "axis_angle_to_layer_plane_deg": 0.0,
+      "ring_normal_vs_axis_deg": [
+        0.0,
+        0.0
+      ]
+    },
+    "host": {
+      "Zr-N_mean": 2.1361890691264382,
+      "Zr-N_min": 2.1287192054945416,
+      "Zr-N_max": 2.158598660022122,
+      "Zr-Cl_mean": 2.7492793544752527,
+      "Zr-Cl_min": 2.7492793544752514,
+      "Zr-Cl_max": 2.7492793544752545,
+      "Cl-Cl_slab_thickness": 6.199300692826376,
+      "Zr-Zr_interplane": 2.6062574614635627
+    }
+  }
+}

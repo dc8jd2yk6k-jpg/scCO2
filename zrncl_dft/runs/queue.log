@@ -1,0 +1,11 @@
+2026-09-30 08:32:36 START [0] 01_pristine/relax.py --mode pbed3
+2026-09-30 08:49:53 END   [0] rc=0 01_pristine/relax.py --mode pbed3
+2026-09-30 08:49:53 START [1] 03_intercalate/build.py
+2026-09-30 08:49:54 END   [1] rc=0 03_intercalate/build.py
+2026-09-30 08:49:54 START [2] 01_pristine/electronic.py
+2026-09-30 08:52:55 ABORT [2] (restart with OpenBLAS)
+2026-09-30 08:52:55 START [2] 01_pristine/electronic.py
+2026-09-30 10:05:48 END   [2] rc=0 01_pristine/electronic.py
+2026-09-30 10:05:48 START [3] 03_intercalate/relax.py --stage lcao
+2026-09-30 10:12:26 ABORT [3] LCAO pre-relaxation too slow (50 s/SCF iter); go straight to PW
+2026-09-30 10:12:45 START [3] 03_intercalate/relax.py --stage pw

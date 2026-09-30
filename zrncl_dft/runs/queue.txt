@@ -1,0 +1,16 @@
+01_pristine/relax.py --mode pbed3
+03_intercalate/build.py
+01_pristine/electronic.py
+03_intercalate/relax.py --stage pw
+02_doped/series.py
+01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
+03_intercalate/electronic.py --stage scf
+03_intercalate/electronic.py --stage dos
+03_intercalate/electronic.py --stage unfold
+03_intercalate/electronic.py --stage charges
+03_intercalate/electronic.py --stage spin
+03_intercalate/molecule.py
+03_intercalate/electronic.py --stage fragments
+01_pristine/convergence_k.py
+01_pristine/relax.py --mode pbe
+01_pristine/relax.py --mode pbed3_cell
