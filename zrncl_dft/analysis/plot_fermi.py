@@ -1,10 +1,10 @@
-"""Fermi-surface cross-sections (kz-projected) of electron-doped beta-ZrNCl.
+"""Fermi contours (k_z-averaged conduction band) of electron-doped beta-ZrNCl.
 
 Uses the dense-mesh conduction-band energies stored by electronic.py: the
 self-consistent jellium x = 0.10 run and the pristine run with the rigid-band
 Fermi level for x = 0.10.  The IBZ (time-reversal only) is unfolded to the
-full mesh; the first kz plane of the compact-cell mesh is contoured (the CB
-disperses by only a few meV along kz).
+full mesh and the conduction band is averaged over the k_z points of each
+in-plane mesh point before contouring.
 
 Usage: python analysis/plot_fermi.py
 """
@@ -15,7 +15,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from style import plt, BLUE, ORANGE, INK2, MUTED  # noqa: E402
+from style import plt, fermi_level, BLUE, ORANGE, INK2, MUTED  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, '..', 'results')
@@ -37,9 +37,14 @@ def full_grid(npz, band=24):
 
 
 def tile_plane(g, size):
-    """kz-plane l=0 on in-plane scaled coords, tiled 3x3 for contouring."""
+    """k_z-averaged band energy on the in-plane mesh, tiled 3x3 for contouring.
+
+    In the compact cell a mesh plane of fixed l has k_z varying with the in-plane
+    position, and the band disperses along k_z away from K; averaging the
+    size[2] k_z points of each in-plane point gives the 2D band of the layer.
+    """
     n1, n2 = size[0], size[1]
-    plane = g[:, :, 0]
+    plane = g.mean(axis=2)
     i = np.arange(-n1, 2 * n1 + 1)
     j = np.arange(-n2, 2 * n2 + 1)
     I, J = np.meshgrid(i, j, indexing='ij')
@@ -66,7 +71,7 @@ def main():
     if os.path.exists(os.path.join(RES, 'x0.10_electronic.npz')):
         g2, size2, d2 = full_grid('x0.10_electronic.npz')
         X2, Y2, E2 = tile_plane(g2, size2)
-        ax.contour(X2, Y2, E2, levels=[float(d2['ef'])], colors=[ORANGE],
+        ax.contour(X2, Y2, E2, levels=[fermi_level('x0.10', d2)], colors=[ORANGE],
                    linewidths=1.6, linestyles='--')
         lines.append(plt.Line2D([], [], color=ORANGE, lw=1.6, ls='--',
                                 label='extra e⁻ + jellium, x = 0.10'))

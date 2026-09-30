@@ -100,9 +100,27 @@ if args.stage == 'dos':
         symmetry={'point_group': False, 'time_reversal': True},
         convergence={'bands': NB - 10, 'eigenstates': 1e-5}, txt=os.path.join(RUN, 'dos.txt'))
     atoms = calc.get_atoms()
-    ef = calc.get_fermi_level()
+    ef_scf = calc.get_fermi_level()     # fixed_density keeps the SCF Fermi level
     from gpaw.dos import DOSCalculator
     dc = DOSCalculator.from_calculator(calc, shift_fermi_level=False)
+    nk = len(calc.get_ibz_k_points())
+    eig = np.array([calc.get_eigenvalues(kpt=k) for k in range(nk)])
+    wk = np.asarray(calc.get_k_point_weights())
+    nel = calc.get_number_of_electrons()
+    # Fermi level of the dense mesh by electron counting with the tetrahedron DOS:
+    # take the highest clean gap below E_F (all bands beneath it are full) and
+    # integrate the DOS upward from there.
+    ng = None
+    for n in range(int(nel // 2), 0, -1):
+        top, bot = eig[:, n - 1].max(), eig[:, n].min()
+        if bot - top > 0.02 and top < ef_scf - 0.05:
+            ng = n
+            break
+    e_gap = 0.5 * (eig[:, ng - 1].max() + eig[:, ng].min())
+    egrid = np.linspace(e_gap, e_gap + 4.0, 4001)
+    dgrid = dc.raw_dos(egrid, width=0.0)
+    ncum = 2 * ng + np.concatenate([[0], np.cumsum(0.5 * (dgrid[1:] + dgrid[:-1]) * np.diff(egrid))])
+    ef = float(np.interp(nel, ncum, egrid))
     energies = np.linspace(ef - 8, ef + 4, 2401)
     dos = dc.raw_dos(energies, width=0.0)
     sym = atoms.get_chemical_symbols()
@@ -120,17 +138,11 @@ if args.stage == 'dos':
     for m, name in enumerate(['dxy', 'dyz', 'dz2', 'dzx', 'dx2-y2']):
         comp[f'Co-{name}'] = dc.raw_pdos(energies, a=ico, l=2, m=m, width=0.0)
 
+    # occupations of the dense-mesh states at the tetrahedron E_F (0..2 per state,
+    # 10 meV Fermi-Dirac only to split states exactly at E_F)
+    occ = 2.0 / (np.exp(np.clip((eig - ef) / 0.01, -60, 60)) + 1.0)
     # state-resolved character: sum_i |<p_i|psi_nk>|^2 over all projectors
     # of the molecule's atoms vs. the layer's atoms
-    nk = len(calc.get_ibz_k_points())
-    eig = np.array([calc.get_eigenvalues(kpt=k) for k in range(nk)])
-    wk = np.asarray(calc.get_k_point_weights())
-    f = np.array([calc.get_occupation_numbers(kpt=k) for k in range(nk)])
-    nel = calc.get_number_of_electrons()
-    if abs(f.sum() - nel) < 1e-3:          # GPAW's f_n already carry k weights
-        occ = f / wk[:, None]              # -> 0..2 per state
-    else:
-        occ = f
     from gpaw.dos import IBZWaveFunctions
     wfs = IBZWaveFunctions(calc)
     wmol = np.zeros_like(eig)
@@ -161,7 +173,9 @@ if args.stage == 'dos':
     mol_occ = [float(np.round(v - ef, 3)) for v in mol_levels if v < ef]
     mol_emp = [float(np.round(v - ef, 3)) for v in mol_levels if v >= ef]
     nef_tot = float(dc.raw_dos([ef], width=0.0)[0])
-    res = {'ef_dos': ef, 'kdos': [9, 9, 1],
+    res = {'ef_dos': ef, 'ef_scf_mesh': ef_scf, 'kdos': [9, 9, 1],
+           'clean_gap_band_index': ng, 'clean_gap_energy': float(e_gap),
+           'n_el_check_sum_occ': float((wk[:, None] * occ).sum()),
            'layer_vbm': float(lay_occ_max), 'layer_cbm': cbm_layer,
            'layer_gap': float(cbm_layer - lay_occ_max),
            'ef_minus_cbm_layer': float(ef - cbm_layer),

@@ -98,5 +98,16 @@
       "ef_minus_cbm": 0.9955221369370051,
       "N_EF_per_ZrNCl": 1.5677413402746294
     }
-  ]
+  ],
+  "jellium_x0.10_dense": {
+    "ef_tetra_minus_cbm": 0.3783630094611583,
+    "ef_dos_minus_cbm": 0.34132352346790373,
+    "N_EF_tetra_per_ZrNCl": 0.28416974694655395,
+    "gamma_valley_minus_cbm": 0.9184234160086584,
+    "kdos": [
+      30,
+      30,
+      3
+    ]
+  }
 }

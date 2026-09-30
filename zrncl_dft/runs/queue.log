@@ -19,3 +19,5 @@
 2026-09-30 13:45:26 START [4] 02_doped/series.py
 2026-09-30 15:50:54 END   [4] rc=0 02_doped/series.py
 2026-09-30 15:50:54 START [5] 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
+2026-09-30 16:40:41 END   [5] rc=0 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
+2026-09-30 16:40:41 START [6] 03_intercalate/electronic.py --stage scf

@@ -60,7 +60,32 @@ Doping is modelled in two ways, x electrons per ZrNCl in both cases:
   - At x = 0.10 it is repeated with the full band/DOS treatment (dense 30×30×3 mesh), because that is the doping
     level of ZrNCl{Co(Cp)₂}₀.₁₀.
 
-DOPED_RESULTS
+![doping](figures/doping_rigid_vs_scf.png)
+
+DOPING_TABLE
+
+**Findings.**
+
+1. **The rigid-band picture holds well for the filling.**
+   - For x ≤ 0.2 the self-consistent E_F − E_CBM exceeds the rigid-band value by only 4–8 % (at x = 0.10: 390 meV vs
+     371 meV).
+   - N(E_F) is the same within the mesh accuracy.
+   - At x = 0.10 the carriers fill two small, nearly circular pockets at K and K′ with k_F ≈ 0.24 Å⁻¹. Each pocket
+     covers 5 % of the Brillouin zone.
+   - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹ and is flat in x up to x ≈ 0.25, the two-dimensional constant-DOS signature.
+   - Near x ≈ 0.28 E_F reaches the Γ valley (0.9 eV above the K minimum) and N(E_F) jumps three- to fourfold.
+2. **Where the rigid band fails.**
+   - The self-consistent charge separates the host bands: the K-conduction-band bottom rises relative to the Γ-valence
+     top by about +65 meV per 0.1 e⁻, from 1.77 eV at x = 0 to 2.02 eV at x = 0.4.
+   - The Γ valley comes down relative to K by up to 50 meV.
+   - Both effects are electrostatic: the added electrons sit in the Zr planes and the compensating charge is spread
+     through the van der Waals gap. In the real intercalate that charge sits on the guests in the gallery.
+3. **The lattice responds.** Relaxing the internal coordinates at x = 0.10 changes the bonds as follows:
+   - Zr–Cl lengthens by 0.020 Å and Zr–N shortens by 0.006 Å.
+   - The energy drops by 18 meV per cell.
+   - The Γ valley moves up to 1.06 eV above the K minimum, while E_F − E_CBM barely changes (398 meV).
+
+X010_DENSE
 
 ## 3. The full intercalate ZrNCl{Co(Cp)₂}₀.₁₀
 

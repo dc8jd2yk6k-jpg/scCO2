@@ -11,7 +11,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from style import (plt, BLUE, ORANGE, AQUA, YELLOW, MAGENTA, INK, INK2,  # noqa: E402
+from style import (plt, fermi_level, BLUE, ORANGE, AQUA, YELLOW, MAGENTA, INK, INK2,  # noqa: E402
                    MUTED, GRID)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +34,7 @@ def pdos():
     if not os.path.exists(f):
         return
     d = np.load(f, allow_pickle=True)
-    e = d['energies'] - d['ef']
+    e = d['energies'] - fermi_level('intercalate', d)
     pd = dict(zip(list(d['keys']), d['pdos']))
     fig, (a1, a2) = plt.subplots(2, 1, figsize=(6.4, 5.2), sharex=True,
                                  gridspec_kw={'hspace': 0.08})
@@ -76,12 +76,12 @@ def unfold():
     if not os.path.exists(f):
         return
     d = np.load(f, allow_pickle=True)
-    x, e, P, F = d['x'], d['e_kn'] - d['ef'], d['P_kn'], d['Fmol_kn']
+    x, e, P, F = d['x'], d['e_kn'] - fermi_level('intercalate', d), d['P_kn'], d['Fmol_kn']
     fig, ax = plt.subplots(figsize=(5.6, 4.4))
     ref = os.path.join(RES, 'x0.10_electronic.npz')
     if os.path.exists(ref):
         r = np.load(ref, allow_pickle=True)
-        xr, er = r['x'], r['eps_band'] - r['ef']
+        xr, er = r['x'], r['eps_band'] - fermi_level('x0.10', r)
         keep = xr <= r['ticks'][3] + 1e-9                       # G-M-K-G part
         for n in range(er.shape[1]):
             ax.plot(xr[keep], er[keep, n], color=MUTED, lw=0.9, zorder=1,

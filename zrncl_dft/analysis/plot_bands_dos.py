@@ -9,7 +9,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from style import plt, BLUE, ORANGE, AQUA, INK, INK2, MUTED, GRID  # noqa: E402
+from style import plt, fermi_level, BLUE, ORANGE, AQUA, INK, INK2, MUTED, GRID  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, '..', 'results')
@@ -32,7 +32,7 @@ def plot(tag, emin=-7.0, emax=4.5):
     nval = 24
     doped = not tag.startswith('pristine')
     if doped:
-        e0 = float(d['ef'])
+        e0 = fermi_level(tag, d)
         zero_label = 'E − E$_F$ (eV)'
     else:
         e0 = float(d['eig_dense'][:, nval - 1].max())

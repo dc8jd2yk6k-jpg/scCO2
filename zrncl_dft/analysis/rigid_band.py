@@ -15,7 +15,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from style import plt, BLUE, ORANGE, AQUA, INK2, MUTED, GRID  # noqa: E402
+from style import plt, BLUE, ORANGE, AQUA, INK, INK2, MUTED, GRID  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, '..', 'results')

@@ -13,7 +13,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from style import plt, BLUE, ORANGE, INK, INK2, MUTED, GRID  # noqa: E402
+from style import plt, fermi_level, BLUE, ORANGE, INK, INK2, MUTED, GRID  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, '..', 'results')
@@ -52,7 +52,7 @@ def main():
     if os.path.exists(os.path.join(RES, 'x0.10_electronic.npz')):
         d = np.load(os.path.join(RES, 'x0.10_electronic.npz'), allow_pickle=True)
         keep = d['x'] <= d['ticks'][3] + 1e-9
-        ef_rel = float(d['ef']) - d['eps_band'][keep, 24].min()
+        ef_rel = fermi_level('x0.10', d) - d['eps_band'][keep, 24].min()
         host_panel(axes[1], 'x0.10', ef_rel, '(b) + 0.10 e⁻/ZrNCl, jellium (SCF)',
                    f'E$_F$ = CBM + {1e3 * ef_rel:.0f} meV')
     f = os.path.join(RES, 'intercalate_unfold.npz')
@@ -61,9 +61,10 @@ def main():
         d = np.load(f, allow_pickle=True)
         x, e, P, F = d['x'], d['e_kn'], d['P_kn'], d['Fmol_kn']
         lay = (F < 0.5) & (P > 0.05)
-        cbm = e[lay & (e > float(d['ef']) - 1.0)].min()
+        ef_i = fermi_level('intercalate', d)
+        cbm = e[lay & (e > ef_i - 1.0)].min()
         e = e - cbm
-        ef_rel = float(d['ef']) - cbm
+        ef_rel = ef_i - cbm
         X = np.repeat(x[:, None], e.shape[1], axis=1)
         s = 26 * P
         ax.scatter(X[lay], e[lay], s=s[lay], color=BLUE, lw=0, zorder=2)
