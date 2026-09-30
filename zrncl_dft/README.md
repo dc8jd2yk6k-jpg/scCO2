@@ -148,7 +148,20 @@ DOS; E_F from electron counting):
 
 ![pdos](figures/intercalate_pdos.png)
 
-CHARGE_TRANSFER_TABLE
+| quantity (per Co(Cp)₂ unless stated) | PBE, 9×9×1, σ = 0.02 eV | PBE, 6×6×1, σ = 0.05 eV |
+|---|---|---|
+| electrons in ZrNCl conduction-band states | **0.76** | 0.73 |
+| electrons left in the guest e₁″ band | 0.24–0.28 | 0.27 |
+| effective doping x_eff (e⁻/ZrNCl) | **0.076** | 0.073 |
+| E_F − E_CBM(ZrNCl layer) | 339 meV | 280 meV (smearing-limited) |
+| guest e₁″ band relative to E_F | −0.00 … +0.11 eV (pinned at E_F) | +0.05 … +0.18 eV |
+| occupied Co 3d (a₁′, e₂′) | −2.9 … −3.2 eV (below the layer VBM at −2.24 eV) | – |
+| ZrNCl layer gap (VBM → CBM) | 1.90 eV | – |
+| layer-type DOS at the CB bottom | 0.26 states eV⁻¹ ZrNCl⁻¹ | – |
+| Bader charge of Co(Cp)₂ (all-electron density) | **+0.64 e** (Co +0.59) | – |
+| Bader: Zr / N / Cl (pristine: +2.27 / −1.60 / −0.67) | +2.24 / −1.61 / −0.69 | – |
+
+MAGNETISM_AND_U
 
 UNFOLD_TEXT
 
