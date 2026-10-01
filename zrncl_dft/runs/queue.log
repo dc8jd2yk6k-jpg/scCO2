@@ -39,3 +39,5 @@
 2026-09-30 22:32:49 START [9] 03_intercalate/electronic.py --stage unfold
 2026-09-30 23:08:46 END   [9] rc=0 03_intercalate/electronic.py --stage unfold
 2026-09-30 23:08:46 START [10] 03_intercalate/electronic.py --stage scfU --U 4
+2026-09-30 23:58:14 END   [10] rc=0 03_intercalate/electronic.py --stage scfU --U 4
+2026-09-30 23:58:14 START [11] 03_intercalate/electronic.py --stage scfU --U 0

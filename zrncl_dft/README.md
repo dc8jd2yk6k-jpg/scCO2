@@ -163,7 +163,21 @@ DOS; E_F from electron counting):
 
 MAGNETISM_AND_U
 
-UNFOLD_TEXT
+**Unfolded band structure.** The supercell states are projected back onto the 1×1 ZrNCl zone. The spectral weights
+are clean: 93 % of the layer states have weight > 0.8 or < 0.2.
+
+![unfold](figures/intercalate_unfolded_bands.png)
+
+- **The host bands are almost those of the jellium-doped host** (grey lines). This holds for the valence band, the
+  K-valley conduction band (bottom at E_F − 0.34 eV, k_F = 0.21–0.23 Å⁻¹) and the higher Zr-4d bands.
+  - The main visible difference is that the Γ valley sits higher: 1.08 eV above the K minimum, as in the jellium host
+    after internal relaxation (1.06 eV). The Zr–Cl expansion causes this.
+  - Neither the guest's electrostatic potential nor its hybridisation reshapes the Zr-4d band.
+- **The guest contributes flat levels.** The occupied Co 3d (a₁′/e₂′) levels lie at −2.9 and −3.2 eV, inside the
+  ZrNCl valence-band energy range. The e₁″ band (bandwidth ≈ 0.1 eV, from guest–guest overlap along the 6.24 Å rows)
+  lies at E_F.
+- **Luttinger count.** The Fermi wave vector corresponds to 0.08–0.09 e⁻/ZrNCl, consistent with the 0.076 e⁻/ZrNCl
+  from state counting. Both lie below the 0.10 that complete ionisation of every guest would give.
 
 ## 4. Three levels of description side by side
 

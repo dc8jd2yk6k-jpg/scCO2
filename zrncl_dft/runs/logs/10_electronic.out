@@ -1,0 +1,49 @@
+{
+ "ef_dos": 5.361060086136055,
+ "ef_scf_mesh": 5.351033520703327,
+ "kdos": [
+  6,
+  6,
+  1
+ ],
+ "clean_gap_band_index": 149,
+ "clean_gap_energy": 4.083577471840721,
+ "n_el_check_sum_occ": 298.95738965563396,
+ "layer_vbm": 3.1274633768841813,
+ "layer_cbm": 5.039691566797261,
+ "layer_gap": 1.9122281899130797,
+ "ef_minus_cbm_layer": 0.32136851933879385,
+ "n_el_above_gap_mid_layer_weighted": 0.7916984856801901,
+ "n_el_above_gap_mid_mol_weighted": 0.16569116995373723,
+ "n_el_in_layer_CB_states": 0.797241616580602,
+ "n_el_in_guest_states_near_EF": 0.16014803905332536,
+ "x_eff_e_per_ZrNCl": 0.0797241616580602,
+ "guest_e1_band_rel_EF": {
+  "min": 0.005396981194778938,
+  "max": 0.21104853480797914
+ },
+ "N_EF_per_cell": 6.3329707533126,
+ "N_EF_per_ZrNCl": 0.63329707533126,
+ "N_EF_layer_weighted_per_ZrNCl": 0.26080041930923986,
+ "N_EF_guest_weighted_per_cell": 3.724966560220201,
+ "molecular_levels_occupied_rel_EF": [
+  -4.001,
+  -3.991,
+  -3.981,
+  -3.971
+ ],
+ "molecular_levels_empty_rel_EF": [
+  0.009,
+  0.019,
+  0.029,
+  0.039,
+  0.059,
+  0.079,
+  0.099,
+  0.119,
+  0.179,
+  0.189,
+  0.199,
+  0.209
+ ]
+}
