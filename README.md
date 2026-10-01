@@ -17,7 +17,8 @@ A plane-wave PAW-DFT (GPAW, PBE / PBE+D3) study that follows Fogg, Green & O'Har
   - At K it is strictly two-dimensional: 0.1 meV of k_z dispersion.
 - **Electron doping.** The rigid-band picture gets the filling right: E_F agrees with the self-consistent jellium
   calculation to within 4–8 % up to x = 0.2.
-  - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹, flat in x until E_F reaches the Γ valley at x ≈ 0.28.
+  - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹ and nearly flat in x (+15 % up to x = 0.2), until E_F reaches the Γ valley at
+    x ≈ 0.28.
   - The self-consistent charge mainly shifts the valence band, by +65 meV of gap per 0.1 e⁻.
 - **ZrNCl{Co(Cp)₂}₀.₁₀.** The unfolded host bands are those of the doped host.
   - Each Co(Cp)₂ gives ≈ 0.8 e to the ZrNCl conduction band. Three independent measures give 0.76–0.87 e: state

@@ -87,7 +87,8 @@ N(E_F) in states eV⁻¹ ZrNCl⁻¹ (both spins); self-consistent values from te
    - N(E_F) is the same within the mesh accuracy.
    - At x = 0.10 the carriers fill two small, nearly circular pockets at K and K′ with k_F ≈ 0.24 Å⁻¹. Each pocket
      covers 5 % of the Brillouin zone.
-   - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹ and is flat in x up to x ≈ 0.25, the two-dimensional constant-DOS signature.
+   - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹ and is nearly flat in x, the two-dimensional constant-DOS signature: it rises
+     by only 15 % up to x = 0.2.
    - Near x ≈ 0.28 E_F reaches the Γ valley (0.9 eV above the K minimum) and N(E_F) jumps three- to fourfold.
 2. **Where the rigid band fails.**
    - The self-consistent charge separates the host bands: the K-conduction-band bottom rises relative to the Γ-valence
@@ -322,9 +323,9 @@ ZrNCl{Co(Cp)₂}₀.₁₀ quantitatively, whether as a rigid band or on jellium
 
 **2. "T_c = 14 K for x = 0.09, 0.10 and 0.15, for 14.7 Å and 16.5 Å spacings, and for the alkali intercalates, so the
 superconductivity is confined to the ZrN layers."** The calculations supply the electronic basis for this inference:
-- **Doping independence.** N(E_F) = 0.28 states eV⁻¹ ZrNCl⁻¹ from x = 0.025 to ≈ 0.25, the constant DOS of the two 2D
-  valleys.
-  - Between x = 0.09 and 0.15 the carrier number changes by 60 % and N(E_F) by less than 5 %.
+- **Doping independence.** N(E_F) stays at 0.28–0.32 states eV⁻¹ ZrNCl⁻¹ from x = 0.025 to 0.2, close to the constant
+  DOS of two 2D valleys.
+  - Between x = 0.09 and 0.15 the carrier number changes by 60 % and N(E_F) by about 5 %.
   - E_F reaches the Γ valley only at x ≈ 0.28.
   - In any picture where T_c is set by N(E_F) and the phonons, as in BCS, this gives a doping-independent T_c. The
     calculation is consistent with the observation; it does not prove the mechanism.
