@@ -33,3 +33,29 @@
 | 0.500 | 1093 | — | 1.676 | — | — |
 
 N(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS 0.274 states/eV/ZrNCl ⇒ m*_DOS = 0.58 m_e (k_z = 0 in-plane curvature: 0.77 m_e).
+
+### ZrNCl{Co(Cp)₂}₀.₁₀ model: electronic structure and charge transfer
+
+| quantity | value |
+|---|---|
+| E_F − E_CBM(ZrNCl layer) | 339 meV |
+| ZrNCl layer gap (VBM→CBM) | 1.905 |
+| electrons in ZrNCl conduction band (per Co(Cp)₂) | 0.761 |
+| effective doping x (e/ZrNCl) | 0.076 |
+| N(E_F) (states/eV/ZrNCl) | 13.825 |
+| Bader charge of Co(Cp)₂ | +0.640 e |
+| highest occupied guest levels (E−E_F, eV) | -2.87, -2.86, -2.85, -0.01 |
+| lowest empty guest levels (E−E_F, eV) | 0.00, 0.01, 0.02, 0.04 |
+
+### Charge-split checks (6×6×1 k, Fermi–Dirac 0.02 eV, same geometry)
+
+| | PBE | PBE+U (U_eff = 4 eV, Co 3d) |
+|---|---|---|
+| electrons in ZrNCl CB states, per guest | 0.78 | 0.80 |
+| electrons in guest states near E_F | 0.25 | 0.16 |
+| x_eff (e⁻/ZrNCl) | 0.078 | 0.080 |
+| E_F − E_CBM(layer) (meV) | 292 | 321 |
+| guest states within 1 eV of E_F (eV) | -0.00 … +0.12 | +0.01 … +0.21 |
+| top of the occupied Co 3d (a₁′/e₂′) levels (eV) | -2.84 | -3.97 |
+| layer gap (eV) | 1.91 | 1.91 |
+| N(E_F), layer states (states/eV/ZrNCl) | 0.266 | 0.261 |

@@ -121,6 +121,51 @@ if ie:
         out.append(f"| lowest empty guest levels (E−E_F, eV) | {', '.join(f'{v:.2f}' for v in emp)} |")
     out.append('')
 
+if ie:
+    checks = [('PBE', ie.get('Ucheck_U0')),
+              ('PBE+U (U_eff = 4 eV, Co 3d)', ie.get('Ucheck_U4')),
+              ('PBE, guest levels +0.5 eV', ie.get('shiftcheck_shift0.5'))]
+    checks = [(lab, c) for lab, c in checks if c]
+    if checks:
+        out.append('### Charge-split checks (6×6×1 k, Fermi–Dirac 0.02 eV, same geometry)\n')
+        out.append('| | ' + ' | '.join(lab for lab, _ in checks) + ' |')
+        out.append('|---' * (len(checks) + 1) + '|')
+
+        def e1(c):
+            g = c.get('guest_e1_band_rel_EF')
+            return '—' if not g else f"{g['min']:+.2f} … {g['max']:+.2f}"
+
+        rows = [('electrons in ZrNCl CB states, per guest',
+                 lambda c: f"{c['n_el_in_layer_CB_states']:.2f}"),
+                ('electrons in guest states near E_F',
+                 lambda c: f"{c['n_el_in_guest_states_near_EF']:.2f}"),
+                ('x_eff (e⁻/ZrNCl)', lambda c: f"{c['x_eff_e_per_ZrNCl']:.3f}"),
+                ('E_F − E_CBM(layer) (meV)', lambda c: f"{1e3 * c['ef_minus_cbm_layer']:.0f}"),
+                ("guest states within 1 eV of E_F (eV)", e1),
+                ('top of the occupied Co 3d (a₁′/e₂′) levels (eV)',
+                 lambda c: f"{max(v for v in c['molecular_levels_occupied_rel_EF'] if v < -1):+.2f}"
+                 if any(v < -1 for v in c['molecular_levels_occupied_rel_EF']) else '—'),
+                ('layer gap (eV)', lambda c: f"{c['layer_gap']:.2f}"),
+                ('N(E_F), layer states (states/eV/ZrNCl)',
+                 lambda c: f"{c['N_EF_layer_weighted_per_ZrNCl']:.3f}")]
+        for lab, fn in rows:
+            out.append(f'| {lab} | ' + ' | '.join(fn(c) for _, c in checks) + ' |')
+        out.append('')
+    sp = ie.get('spin_check')
+    if sp:
+        line = (f"Spin-polarised SCF (6×6×1, started from 1 μB on Co): total moment "
+                f"{sp['magmom_total']:.3f} μB, Co {sp['magmom_Co']:+.3f} μB, "
+                f"Σ|m| {sp['magmom_abs_sum']:.3f} μB")
+        if ie.get('Ucheck_U0'):
+            line += (f"; E(spin) − E(non-spin) = "
+                     f"{1e3 * (sp['energy_spin'] - ie['Ucheck_U0']['energy']):.1f} meV per cell")
+        out.append(line + '.\n')
+
+if mol and 'curvature_e1_SOMO_minus_cation_LUMO' in mol:
+    out.append(f"Isolated molecule: ε_SOMO(Co(Cp)₂) − ε_LUMO(Co(Cp)₂⁺) at the neutral geometry = "
+               f"{mol['curvature_e1_SOMO_minus_cation_LUMO']:.2f} eV (PBE curvature of E(N) for the "
+               "e₁″ level; zero for the exact functional).\n")
+
 with open(os.path.join(RES, 'summary.md'), 'w') as fh:
     fh.write('\n'.join(out))
 print('\n'.join(out))

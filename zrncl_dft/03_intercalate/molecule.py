@@ -90,6 +90,15 @@ neu.calc = calc('cocp2_cation_at_neutral', 1, False)
 e_vert = neu.get_potential_energy()
 res['IE_adiabatic'] = res['cocp2_cation']['energy'] - res['cocp2_neutral']['energy']
 res['IE_vertical'] = e_vert - res['cocp2_neutral']['energy']
+# levels of the cation at the neutral geometry: with the neutral's SOMO this
+# gives PBE's spurious curvature of E(N) for the e1'' level,
+# eps_SOMO(neutral) - eps_LUMO(cation), at one geometry
+res['cation_at_neutral_levels'] = frontier(neu.calc, False)
+res['curvature_e1_SOMO_minus_cation_LUMO'] = (
+    res['cocp2_neutral']['levels']['spin0']['homo']
+    - res['cation_at_neutral_levels']['spin0']['lumo'])
 if world.rank == 0:
     print('IE adiabatic %.3f  vertical %.3f eV' % (res['IE_adiabatic'], res['IE_vertical']))
+    print('eps_SOMO(neutral) - eps_LUMO(cation), same geometry: %.3f eV'
+          % res['curvature_e1_SOMO_minus_cation_LUMO'])
     save_json('molecule.json', res)
