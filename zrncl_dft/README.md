@@ -181,18 +181,119 @@ are clean: 93 % of the layer states have weight > 0.8 or < 0.2.
 
 ## 4. Three levels of description side by side
 
-COMPARISON
+![three stages](figures/three_stage_bands.png)
+
+All three panels are aligned at the K conduction-band minimum of the ZrNCl layer.
+
+| | (a) rigid band, x = 0.10 | (b) 0.10 e⁻ + jellium (SCF) | (c) ZrNCl{Co(Cp)₂}₀.₁₀ (PBE) |
+|---|---|---|---|
+| electrons in the Zr-4d conduction band, per ZrNCl | 0.10 (imposed) | 0.10 (imposed) | 0.076 (state count), 0.087 (Luttinger) |
+| where the compensating positive charge sits | nowhere (bands frozen) | uniform background | on the guest (Bader +0.64 e) |
+| E_F − E_CBM(K) | 371 meV | 378 meV (relaxed: 398 meV) | 339 meV |
+| N(E_F), states eV⁻¹ ZrNCl⁻¹ | 0.289 | 0.284 (relaxed: 0.270) | 0.26 (layer states) |
+| k_F around K | 0.236 Å⁻¹ | 0.236 Å⁻¹ | 0.21–0.23 Å⁻¹ |
+| gap VBM(Γ) → CBM(K) | 1.77 eV | 1.84 eV | 1.90 eV |
+| Γ valley above the K minimum | 0.94 eV | 0.92 eV (relaxed: 1.06 eV) | 1.08 eV |
+| other states at E_F | – | – | guest e₁″ band, 0.24 e per guest |
+
+**(a) → (b): adding the electrons self-consistently.**
+- The filling is almost unchanged: E_F, N(E_F) and k_F agree within 2 %.
+- What changes is the valence band, which the extra charge pushes down relative to the K valley (+65 meV of gap per
+  0.1 e⁻).
+- Relaxing the lattice around the added charge (Zr–Cl +0.02 Å) lifts the Γ valley by 0.14 eV. Nothing else moves
+  appreciably.
+
+**(b) → (c): replacing the jellium by real Co(Cp)₂ donors.**
+- The host bands stay those of the relaxed jellium host: the K pocket, its mass, and the Γ valley at 1.08 eV. Section 3
+  shows the unfolded bands.
+- The larger layer gap (1.90 eV) comes from the 14.7 Å spacing: it removes the interlayer dispersion of the valence
+  band (0.26 eV along k_z in the pristine stacking). The K valley has no such dispersion to lose.
+- The one difference that matters is the filling. In PBE each guest keeps ≈ 0.2 e in its e₁″ level, so the host is
+  doped to x_eff ≈ 0.08–0.09 instead of 0.10. That lowers E_F by ≈ 40 meV and leaves N(E_F) unchanged.
+
+**Bottom line.** For the conduction electrons, "β-ZrNCl + x e⁻" with x between 0.08 and 0.10 describes
+ZrNCl{Co(Cp)₂}₀.₁₀ quantitatively, whether as a rigid band or on jellium. The guest has three roles:
+1. It sets x.
+2. It opens the gallery, which decouples the layers but changes nothing at K.
+3. It adds flat molecular levels. The occupied Co 3d levels lie ~3 eV below E_F; the e₁″ level lies at E_F in PBE,
+   which the checks above suggest is an artefact.
 
 ## 5. What this says about the paper's observations
 
-DISCUSSION
+**1. "Intercalation turns an insulator (4×10⁻⁷ S cm⁻¹) into a metal (5.6 S cm⁻¹)."**
+- Pristine β-ZrNCl is a band insulator (PBE gap 1.77 eV, larger in reality).
+- In the intercalate E_F lies 0.34 eV inside the Zr-4d conduction band. There are two Fermi pockets, at K and K′
+  (k_F ≈ 0.22 Å⁻¹), holding 0.08–0.10 electrons per ZrNCl.
+- The metal belongs to the host. The guest donates electrons but contributes no dispersive states at E_F.
+- A pressed-pellet conductivity is limited by grain boundaries, so no intrinsic value is compared here.
+
+**2. "T_c = 14 K for x = 0.09, 0.10 and 0.15, for 14.7 Å and 16.5 Å spacings, and for the alkali intercalates, so the
+superconductivity is confined to the ZrN layers."** The calculations supply the electronic basis for this inference:
+- **Doping independence.** N(E_F) = 0.28 states eV⁻¹ ZrNCl⁻¹ from x = 0.025 to ≈ 0.25, the constant DOS of the two 2D
+  valleys.
+  - Between x = 0.09 and 0.15 the carrier number changes by 60 % and N(E_F) by less than 5 %.
+  - E_F reaches the Γ valley only at x ≈ 0.28.
+  - In any picture where T_c is set by N(E_F) and the phonons, as in BCS, this gives a doping-independent T_c. The
+    calculation is consistent with the observation; it does not prove the mechanism.
+- **Independence of the interlayer spacing.** The conduction-band states at K live in the Zr–N double layer
+  (83 % Zr 4d, 16 % N 2p).
+  - Even at the pristine 9.2 Å spacing they disperse by only 0.1 meV along k_z, because the rhombohedral stacking
+    cancels the interlayer hopping at K. Elsewhere on the Fermi pockets the interlayer coupling is 16–31 meV.
+  - At 14.7 Å, with real guests in the gallery, the layer bands near E_F are those of the doped host.
+  - The Fermi-level electrons are therefore two-dimensional and insensitive to the gallery height and its contents. A
+    guest that changes the spacing, Cp* instead of Cp, should not change T_c.
+- **The guests are spectators.** Their occupied levels lie ~3 eV below E_F.
+  - If they kept a magnetic moment (neutral Co(Cp)₂ has S = ½), one would expect pair breaking.
+  - The identical T_c of the cobaltocene and alkali-metal intercalates fits closed-shell cobaltocenium guests better.
+    That is also where the PBE checks point (below).
+
+**3. The doping level.** Elemental analysis gives x = 0.10 guests per ZrNCl. Fogg et al. assume one electron per
+guest.
+- PBE transfers 0.76–0.87 e per guest. Bader puts +0.64 e on Co(Cp)₂.
+- The guest geometry, Co–C 2.058 Å, is that of the cation.
+- Adding U on Co 3d does not change the split (0.80 e at U_eff = 4 eV). Raising the guest levels does: see
+  "Magnetism, +U and guest-level checks" in section 3.
+- The most likely situation is complete ionisation, Co(Cp)₂⁺ + 0.10 e⁻/ZrNCl. PBE's fractional occupation of the
+  e₁″ level is the textbook signature of its delocalisation error.
+- Either way the doping lies in the flat-N(E_F) window.
+
+**4. Superconducting length scales.** This is an order-of-magnitude consistency check only.
+- **From the bands at x = 0.10:** ħv_F = 2.9–3.5 eV Å, i.e. v_F = 4.4–5.3 × 10⁵ m/s (the pockets are trigonally
+  warped).
+  - With a weak-coupling gap Δ = 1.76 k_B T_c = 2.1 meV, the BCS coherence length is ξ₀ = ħv_F/(πΔ) ≈ 45–50 nm.
+  - Δ/E_F ≈ 0.006 and k_F ξ₀ ≈ 100, which puts the compound on the BCS side.
+- **From the paper's critical fields** (H_c2 = 0.45 T for Cp, 0.50 T for Cp′, 0.70 T for Cp*, measured on powders at
+  3 K): read as H_c2 = Φ₀/(2πξ²), they give ξ_GL ≈ 27, 26 and 22 nm.
+- **Comparison.** These are of the same order as ξ₀; the clean-limit GL value would be 0.74 ξ₀ ≈ 35 nm.
+  - A somewhat shorter ξ_GL is what a mean free path of a few tens of nm would give.
+  - The resistivity upturn below 70 K also points to disorder.
+
+**5. Later work.**
+- **Band structure.** Band calculations on LiₓZrNCl and NaₓHfNCl reached the same picture: the electrons enter a single
+  light band of in-plane d_xy/d_x²−y² character ([Weht, Filippetti & Pickett, EPL 48, 320
+  (1999)](https://iopscience.iop.org/article/10.1209/epl/i1999-00484-4)). The intercalate calculation here shows that a
+  molecular donor gives the same conduction band.
+- **The value of T_c is not explained by this work.**
+  - In LiₓZrNCl, T_c rises sharply when x is reduced below ≈ 0.12, just before the superconductor–insulator transition
+    ([Taguchi, Kitora & Iwasa, PRL 97, 107001 (2006)](https://link.aps.org/doi/10.1103/PhysRevLett.97.107001)). A
+    constant N(E_F) alone cannot produce that rise.
+  - Ab initio electron–phonon calculations gave an average coupling λ ≈ 0.5, too weak for the observed T_c in standard
+    Eliashberg theory ([Heid & Bohnen, PRB 72, 134527 (2005)](https://doi.org/10.1103/PhysRevB.72.134527)).
+  - At low carrier density, gate-doped ZrNCl crosses over from BCS towards BEC-like pairing ([Nakagawa et al., Science
+    372, 190 (2021)](https://doi.org/10.1126/science.abb9860)).
+- **What this work answers.** The paper's hope, that band-structure calculations would give "further insights into the
+  origins of the superconductivity", is answered only partly. The calculations explain why T_c does not care about the
+  guest, the gallery height or the exact doping. The pairing mechanism needs electron–phonon (and possibly
+  beyond-phonon) calculations that were not done here.
 
 ## Caveats
 
-- **Functional.** Semilocal PBE underestimates the host gap, and so misplaces how deep the guest levels sit relative to
-  the ZrNCl bands.
-  - The qualitative conclusion (complete ionisation of Co(Cp)₂) rests on an energy separation. The report quotes that
-    separation below so it can be judged against a typical PBE error.
+- **Functional.** PBE underestimates the host gap.
+  - Being semilocal, it also favours fractional charges, which affects where the guest's frontier level sits relative
+    to the host E_F.
+  - The charge split (0.76–0.87 e per guest instead of 1) is the result most exposed to this error. Section 3 brackets
+    it with the +U and guest-level checks.
+  - A hybrid functional would be the proper test. It was out of reach for a 51-atom metallic cell on this machine.
 - **Ordered model.** The intercalate is an ordered, AA-stacked model at exactly x = 1/10.
   - The real compound is powder-crystalline, probably with disordered guests and its own stacking.
   - The resistivity upturn below ~70 K reported in the paper (weak localisation) is a disorder effect that this model

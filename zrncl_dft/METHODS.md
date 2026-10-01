@@ -7,8 +7,12 @@
   D3 changes only the geometry, not the Kohn–Sham Hamiltonian.
 - Plane-wave cutoff **600 eV**. Relative to 800 eV, forces agree within 0.01 eV/Å and the gap within 2 meV
   (`figures/convergence_cutoff.png`, `results/convergence.json`).
-- Occupations: Fermi–Dirac smearing, 0.01 eV (insulator), 0.02 eV (doped host) and 0.05–0.1 eV (intercalate).
-  DOS and N(E_F) use the linear tetrahedron method on non-self-consistent dense meshes.
+- Occupations: Fermi–Dirac smearing, 0.01 eV (insulator), 0.02 eV (doped host and intercalate electronic structure),
+  0.1 eV (intercalate relaxation only).
+  - DOS and N(E_F) use the linear tetrahedron method, either on non-self-consistent dense meshes or on the SCF mesh.
+  - E_F is always obtained by counting electrons with the tetrahedron DOS, integrated up from a clean gap below E_F.
+  - For the intercalate, 0.05 eV smearing is too coarse: it put ≈ 0.2 e too many into the guest level, which lies
+    within 0.1–0.2 eV of E_F (`results/intercalate_electronic_k6_w0.05.json`).
 - BLAS: OpenBLAS. The Ubuntu image linked GPAW to reference BLAS at first; everything after the cutoff scan used OpenBLAS.
 
 ## Structures
@@ -31,9 +35,16 @@
   - The Cp–Co–Cp axis lies parallel to the layers, as deduced in Fogg et al. from d(CoCp₂) = d(CoCp′₂) < d(CoCp*₂).
   - Guests along the 6.24 Å vector meet ring-edge to ring-edge with interdigitated pentagons (shortest guest–guest
     H···H 2.48 Å). The uppermost and lowermost H of each ring point into Cl hollows (H···Cl 2.77 Å at the start).
-  - Relaxation: all atoms relaxed with the cell fixed. First LCAO/dzp+D3 (fmax 0.05 eV/Å), then plane waves+D3
-    (fmax 0.02–0.03 eV/Å), both on a Γ-centred 3×3×1 mesh. That mesh contains the folded K/K′ points (0, ±1/3) where
-    the host conduction band has its minimum.
+  - Relaxation: all atoms relaxed with the cell fixed, using plane waves (600 eV) + D3(BJ) and ASE BFGS (maximum
+    step 0.1 Å) to a residual force of 0.021 eV/Å.
+    - The k mesh is a Γ-centred 3×3×1, which contains the folded K/K′ points (0, ±1/3) where the host conduction band
+      has its minimum.
+    - The relaxation keeps the Cm mirror plane of the starting model.
+    - Abandoned approaches: an LCAO/dzp pre-relaxation (slower per SCF than plane waves) and PreconLBFGS (its line
+      search cost 2–3 SCFs per step).
+  - `03_intercalate/symmetry_check.py` restarts from the relaxed structure with the mirror broken: guest tilted by 8°,
+    rotated by 6° about the layer normal, all atoms displaced randomly by 0.03 Å. It tests whether the
+    axis-parallel orientation is a minimum.
 - **Isolated Co(Cp)₂ (S = ½) and Co(Cp)₂⁺ (S = 0)**: real-space PAW (h = 0.18 Å) with open boundaries, so the cation
   needs no charged-cell correction. Gives Co–C fingerprints of the oxidation state and the ΔSCF ionisation energy.
 
@@ -44,7 +55,9 @@
 | β-ZrNCl | 12×12×3 | 30×30×3 (tetrahedron) | Γ–M–K–Γ–Z (kz = 0 in-plane path) |
 | doped series | 18×18×2 (check 24×24×2) | tetrahedron on SCF mesh | – |
 | doped x = 0.10 | 18×18×3 | 30×30×3 | Γ–M–K–Γ–Z |
-| intercalate | 6×6×1 | 9×9×1 (tetrahedron) | unfolded onto Γ–M–K–Γ of the 1×1 cell |
+| intercalate, relaxation | 3×3×1 | – | – |
+| intercalate | 9×9×1 (σ = 0.02 eV) | tetrahedron on the 9×9×1 SCF mesh | unfolded onto Γ–M–K–Γ of the 1×1 cell (56 k) |
+| intercalate checks (+U, guest shift, spin, fragments) | 6×6×1 (σ = 0.02 eV) | tetrahedron on the SCF mesh | – |
 
 All meshes contain the in-plane K point, the conduction-band minimum.
 
@@ -54,9 +67,22 @@ All meshes contain the in-plane K point, the conduction-band minimum.
      > 50 % on the layer, above the middle of the layer gap.
   2. The positions of the guest levels relative to E_F: the occupied Co 3d "a₁′/e₂′" set and the empty e₁″* level,
      which is the SOMO of neutral Co(Cp)₂.
-  3. Bader (all-electron density, `pybader`) and Hirshfeld charges.
+  3. Bader charges from the all-electron density (`gridrefinement=2`, `pybader`). Hirshfeld partitioning is not
+     available for GPAW plane-wave mode.
   4. The plane-averaged density difference Δρ(z) = ρ[intercalate] − ρ[slab] − ρ[guest] at frozen geometry, and its
      integral (the charge-displacement curve).
 - **Band unfolding**: spectral weights P_Km(k) = Σ_g |C_Km(k−K+g)|² from the pseudo-wavefunction plane-wave
   coefficients, using the 1×1 ZrNCl cell of the same layer.
+  - The run is non-self-consistent from the 9×9×1 density, along Γ–M–K–Γ with 20 points per Å⁻¹, using 180 bands of
+    which the lowest 168 are converged to 10⁻⁴ eV².
+  - The supercell matrix is M = [[2,1,0],[−1,2,0],[0,0,1]]. GPAW's G vectors are in bohr⁻¹, so the cell enters in bohr.
+  - Each state is labelled layer or guest by its PAW-projection weight. Fermi wave vectors are taken where the
+    unfolded layer band crosses E_F.
+- **Sensitivity checks of the charge split** (6×6×1, σ = 0.02 eV, same geometry), compared with plain PBE on the
+  same mesh:
+  - PBE+U: Dudarev U_eff = 4 eV on Co 3d.
+  - Guest-level shift: a smooth potential step of +0.5 eV for electrons on the guest. It is applied on the union of
+    spheres R = 1.8 Å (erfc edge 0.25 Å) around Co and the ten C atoms; the Cl nuclei lie ≥ 3.5 Å away. This is a
+    scissor-like stand-in for a correction of the guest's frontier level, not a functional.
+  - Spin polarisation: the SCF is started from 1 μ_B on Co.
 - Conduction-band effective masses: parabolic fits within |k − K| ≤ 0.05 Å⁻¹ along K→Γ and K→M.

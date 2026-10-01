@@ -12,6 +12,9 @@ Stages (run in order; each checkpoints to runs/intercalate/):
   charges    Hirshfeld and Bader (all-electron density) charges per fragment
   fragments  slab-only and molecule-only SCFs at the frozen geometry ->
              plane-averaged density difference and charge-displacement curve
+  scfU       PBE+U (Dudarev U_eff on Co 3d) on the 6x6x1 mesh
+  shift      a potential step of +dV on the guest (smooth spheres around Co
+             and C): how far must the guest levels move for full ionisation?
 
 Run:  mpiexec -n 4 python 03_intercalate/electronic.py --stage scf   (etc.)
 """
@@ -30,9 +33,11 @@ from common import gpaw_calc, unfold_path, unfold_weights, RESULTS, ROOT  # noqa
 
 p = argparse.ArgumentParser()
 p.add_argument('--stage', required=True,
-               choices=['scf', 'spin', 'dos', 'unfold', 'charges', 'fragments', 'scfU'])
+               choices=['scf', 'spin', 'dos', 'unfold', 'charges', 'fragments', 'scfU',
+                        'shift'])
 p.add_argument('--structure', default=None)
 p.add_argument('--U', type=float, default=4.0, help='U_eff on Co 3d (eV) for --stage scfU')
+p.add_argument('--dV', type=float, default=0.5, help='guest potential shift (eV), --stage shift')
 args = p.parse_args()
 
 RUN = os.path.join(ROOT, 'runs', 'intercalate')
@@ -236,6 +241,59 @@ if args.stage == 'scfU':
     r = dos_analysis(atoms.calc, tag=tag, kmesh=KAUX['size'])
     r['energy'] = e
     update_json({f'Ucheck{tag}': r})
+
+# --------------------------------------------------------------------- guest shift
+if args.stage == 'shift':
+    # Sensitivity of the charge split to the position of the guest levels.
+    # PBE leaves the nearly empty e1'' level pinned at E_F; its self-interaction
+    # error makes such a level too deep.  Here a smooth potential step of +dV
+    # (electron energy) is put on the guest: the union of spheres of radius
+    # R = 1.8 A (erfc edges, width 0.25 A) around Co and the ten C atoms.
+    # This covers the guest's H atoms and stays clear of the Cl atoms
+    # (C...Cl >= 3.5 A).  It is a scissor-like stand-in for a level
+    # correction, not a functional.
+    from scipy.special import erfc
+    from ase.units import Bohr, Ha
+    from gpaw.external import ExternalPotential
+
+    class GuestShift(ExternalPotential):
+        def __init__(self, centres, cell, dV, R=1.8, w=0.25):
+            self.centres, self.cell = np.asarray(centres), np.asarray(cell)
+            self.dV, self.R, self.w = dV, R, w
+            self.name = 'GuestShift'
+
+        def __str__(self):
+            return (f'Guest shift: {self.dV:+.3f} eV on spheres of R = {self.R} A '
+                    f'(edge {self.w} A) around {len(self.centres)} guest atoms')
+
+        def todict(self):
+            return {'name': self.name, 'dV': self.dV, 'R': self.R, 'w': self.w}
+
+        def calculate_potential(self, gd):
+            r = gd.get_grid_point_coordinates() * Bohr          # (3, ...) in A
+            f = np.zeros(r.shape[1:])
+            for c0 in self.centres:
+                for i in (-1, 0, 1):
+                    for j in (-1, 0, 1):
+                        for k in (-1, 0, 1):
+                            c = c0 + np.dot([i, j, k], self.cell)
+                            d = np.sqrt(((r - c[:, None, None, None]) ** 2).sum(0))
+                            np.maximum(f, 0.5 * erfc((d - self.R) / self.w), out=f)
+            self.vext_g = f * self.dV / Ha
+
+    atoms = structure()
+    lay, mol = layer_mol_indices(atoms)
+    heavy = [i for i in mol if atoms[i].symbol != 'H']
+    tag = f'_shift{args.dV:g}'
+    vext = GuestShift(atoms.positions[heavy], atoms.cell.array, args.dV)
+    atoms.calc = gpaw_calc(os.path.join(RUN, f'scf{tag}.txt'), KAUX, width=WIDTH,
+                           nbands=NB, convergence=dict(CONV, bands=NB - 10),
+                           external=vext)
+    e = atoms.get_potential_energy()
+    r = dos_analysis(atoms.calc, tag=tag, kmesh=KAUX['size'])
+    r['energy_incl_external'] = e
+    r['dV'] = args.dV
+    update_json({f'shiftcheck{tag}': r})
 
 # --------------------------------------------------------------------- unfold
 if args.stage == 'unfold':
