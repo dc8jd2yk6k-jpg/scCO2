@@ -301,5 +301,10 @@
     ],
     "energy_incl_external": -364.92490843558215,
     "dV": 0.5
-  }
+  },
+  "fragments_kpts": [
+    6,
+    6,
+    1
+  ]
 }

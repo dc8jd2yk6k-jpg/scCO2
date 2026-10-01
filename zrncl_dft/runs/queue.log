@@ -57,3 +57,5 @@
 2026-10-01 02:35:59 START [18] 03_intercalate/molecule.py
 2026-10-01 02:39:36 END   [18] rc=42 03_intercalate/molecule.py
 2026-10-01 02:39:36 START [19] 03_intercalate/electronic.py --stage fragments
+2026-10-01 03:03:53 END   [19] rc=0 03_intercalate/electronic.py --stage fragments
+2026-10-01 03:03:53 START [20] 03_intercalate/molecule.py

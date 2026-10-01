@@ -169,6 +169,22 @@ DOS; E_F from electron counting):
 | Bader charge of Co(Cp)₂ (all-electron density) | **+0.64 e** (Co +0.59) | – |
 | Bader: Zr / N / Cl (pristine: +2.27 / −1.60 / −0.67) | +2.24 / −1.61 / −0.69 | – |
 
+**Where the charge goes.** The figure shows the plane-averaged density difference
+Δρ̄(z) = ρ[intercalate] − ρ[ZrNCl slab] − ρ[neutral Co(Cp)₂ lattice] at frozen geometry, and its running integral
+ΔQ(z).
+
+![drho](figures/intercalate_drho.png)
+
+- Electrons leave the guest region: 0.56 e between the two extrema of ΔQ(z), which lie in the gallery about 1.5 Å
+  outside the Cl planes.
+- Most of this charge piles up on the gallery side of the Cl planes, +0.22 e on each side. The slab interior gains a
+  net 0.1 e: the Zr planes gain 0.22 e and the Zr–Cl bond region loses some.
+- The plane average mixes two effects:
+  - the filling of Zr-4d conduction states (≈ 0.8 e by state counting);
+  - the polarisation of the whole slab towards the cations, as the Cl density shifts toward the guests.
+- So it does not say by itself how many electrons occupy the conduction band. The amount that crosses into the slab
+  side, 0.56 e, is in line with the Bader charge of +0.64 e.
+
 **Magnetism, +U and guest-level checks.** Is the incomplete transfer robust? Three checks, all at the same geometry
 on a 6×6×1 mesh with σ = 0.02 eV (PBE on that mesh is the reference column):
 
