@@ -69,3 +69,5 @@
 2026-10-01 04:26:16 START [24] 01_pristine/convergence_k.py
 2026-10-01 04:32:57 END   [24] rc=0 01_pristine/convergence_k.py
 2026-10-01 04:32:57 START [25] 01_pristine/relax.py --mode pbed3_cell
+2026-10-01 04:59:24 END   [25] rc=0 01_pristine/relax.py --mode pbed3_cell
+2026-10-01 04:59:24 START [26] 03_intercalate/symmetry_check.py

@@ -27,7 +27,10 @@ largest shift is 0.02–0.03 Å, on Cl. At fixed cell, D3 changes the bond lengt
 | starting model | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |
 | PBE, experimental cell | 3.6046 | 27.672 | 0.1195 | 0.1976 | 0.3878 | 2.129 | 2.164 | 2.751 |
 | PBE+D3(BJ), experimental cell | 3.6046 | 27.672 | 0.1196 | 0.1976 | 0.3880 | 2.129 | 2.159 | 2.749 |
-CELL_RELAXED_ROW
+| PBE+D3(BJ), cell relaxed (800 eV) | 3.5919 | 27.405 | 0.1190 | 0.1979 | 0.3868 | 2.122 | 2.161 | 2.744 |
+
+With the cell free, PBE+D3 gives a = 3.592 Å (−0.4 %) and c = 27.41 Å (−1.0 %), i.e. a basal spacing of 9.14 Å
+against 9.22 Å measured. All production calculations therefore keep the experimental cell.
 
 **Electronic structure** ([figure](figures/pristine_bands_dos.png)):
 
