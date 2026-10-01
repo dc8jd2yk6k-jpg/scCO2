@@ -130,8 +130,9 @@ misses is the ≈ 65 meV relative shift of the valence band.
 - Composition: one ZrNCl double layer (10 formula units) plus one Co(Cp)₂ per gallery (51 atoms), i.e. exactly the
   analysed composition ZrNCl{Co(Cp)₂}₀.₁₀.
 - Cell: basal spacing fixed at the measured 14.7 Å; in-plane √3a × √7a supercell giving 56.3 Å² per guest.
-- Guest orientation: Cp–Co–Cp axis parallel to the layers, as the paper infers from the Cp/Cp′/Cp* series. Along the
-  6.24 Å cell vector the guests interdigitate ring-edge to ring-edge.
+- Guest orientation: Cp–Co–Cp axis parallel to the layers, as the paper infers from the Cp/Cp′/Cp* series. A
+  symmetry-broken relaxation confirms this orientation is stable against tilting (see Caveats). Along the 6.24 Å cell
+  vector the guests interdigitate ring-edge to ring-edge.
 - Relaxation: PBE+D3(BJ), all atoms, residual force 0.021 eV/Å.
 
 **Relaxed geometry** ([figure](figures/structures.png)):
@@ -403,8 +404,15 @@ guest.
     cannot capture.
 - **Geometry constraints.** The cell is fixed at the measured basal spacing and the experimental in-plane lattice
   constant.
-  - The relaxation keeps the mirror symmetry (space group Cm) of the starting model, so the "axis parallel to the
-    layers" orientation is imposed, not predicted.
+  - The production relaxation keeps the mirror plane (space group Cm) of the starting model. A check without it
+    (`03_intercalate/symmetry_check.py`) rotated the guest rigidly by 8° out of the layer plane and 6° about the layer
+    normal, which costs +105 meV.
+    - After 28 BFGS steps the axis is back in the plane (tilt 0.95°), so the axis-parallel orientation is stable.
+    - The in-plane rotation stays at 6.3°, and the structure ends 4.7 meV *below* the Cm one. The in-plane
+      orientation is therefore nearly free: a few meV per guest, i.e. tens of K. The guests can librate or disorder
+      in-plane, and the mirror-symmetric orientation is not the exact minimum.
+    - The guest's bond lengths (mean Co–C 2.0586 vs 2.0576 Å) and contacts barely change, so the electronic results
+      are unaffected.
 - **Jellium doping.** It spreads the compensating charge uniformly, including through the van der Waals gap. It is a
   model of doping, not of any particular donor.
 - **Scope.** No electron–phonon coupling was computed, so nothing here predicts T_c.

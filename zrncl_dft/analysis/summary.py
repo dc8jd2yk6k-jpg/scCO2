@@ -166,6 +166,13 @@ if mol and 'curvature_e1_SOMO_minus_cation_LUMO' in mol:
                f"{mol['curvature_e1_SOMO_minus_cation_LUMO']:.2f} eV (PBE curvature of E(N) for the "
                "e₁″ level; zero for the exact functional).\n")
 
+sc = load('intercalate_symcheck.json')
+if sc:
+    g = sc['guest_broken_relaxed']
+    out.append(f"Symmetry check (guest rotated 8° out of plane + 6° in plane, relaxed {sc['steps']} BFGS steps, "
+               f"fmax {sc['fmax']:.3f} eV/Å): E − E(Cm) = {sc['dE_meV']:+.1f} meV, final axis tilt "
+               f"{g['axis_angle_to_layer_plane_deg']:.2f}°, Co–C {g['Co-C_mean']:.4f} Å.\n")
+
 with open(os.path.join(RES, 'summary.md'), 'w') as fh:
     fh.write('\n'.join(out))
 print('\n'.join(out))
