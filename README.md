@@ -20,8 +20,8 @@ A plane-wave PAW-DFT (GPAW, PBE / PBE+D3) study that follows Fogg, Green & O'Har
   - N(E_F) ≈ 0.28 states eV⁻¹ ZrNCl⁻¹, flat in x until E_F reaches the Γ valley at x ≈ 0.28.
   - The self-consistent charge mainly shifts the valence band, by +65 meV of gap per 0.1 e⁻.
 - **ZrNCl{Co(Cp)₂}₀.₁₀.** The unfolded host bands are those of the doped host.
-  - Each Co(Cp)₂ gives ≈ 0.8 e to the ZrNCl conduction band. Four independent measures give 0.76–0.87 e: state
-    counting, the Fermi wave vector, Bader charges and the guest's Co–C bond length.
+  - Each Co(Cp)₂ gives ≈ 0.8 e to the ZrNCl conduction band. Three independent measures give 0.76–0.87 e: state
+    counting, the Fermi wave vector and the guest's Co–C bond length. Bader puts +0.64 e on the guest.
   - The rest stays in the guest's e₁″ level, which the electrostatics of the charged gallery pin at E_F.
   - The guest is non-magnetic in PBE, and the result survives +U on Co and a +0.5 eV shift of the guest levels.
 - **What this explains.** A two-dimensional conduction band with a flat N(E_F) explains why the paper's T_c (14 K)
