@@ -65,3 +65,5 @@
 2026-10-01 03:17:55 START [22] 03_intercalate/molecule.py
 2026-10-01 03:22:03 END   [22] rc=0 03_intercalate/molecule.py
 2026-10-01 03:22:03 START [23] 03_intercalate/electronic.py --stage spin
+2026-10-01 04:26:16 END   [23] rc=0 03_intercalate/electronic.py --stage spin
+2026-10-01 04:26:16 START [24] 01_pristine/convergence_k.py

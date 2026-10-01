@@ -215,7 +215,13 @@ On this coarse mesh the state counts are uncertain by up to ±0.1 e: the first t
 0.91–1.03 instead of 1. The shift of E_F − E_CBM, read with the layer DOS of 2.66 states eV⁻¹ per cell, measures the
 change in the layer's filling independently.
 
-- **Spin.** ⟪SPIN⟫
+- **No magnetism.** A spin-polarised SCF started from 1 μ_B on Co loses the moment completely.
+  - The total moment ends at −0.0003 μ_B (Co −0.0001 μ_B), and the energy equals the non-spin-polarised one to within
+    0.01 meV per cell.
+  - The 0.1–0.2 e left in the 0.1 eV-wide e₁″ band is far too little to polarise it.
+  - So in PBE no guest carries a moment, unlike neutral Co(Cp)₂ (S = ½). A real crystal could realise the fractional
+    average as a mixture of integer-charged guests (section 5, point 3). An ordered cell treated in semilocal DFT
+    cannot represent that state.
 - **+U on Co 3d barely matters.**
   - U_eff = 4 eV pushes the filled a₁′/e₂′ levels down by 1.1 eV but lifts the e₁″ band by only 0.01–0.09 eV. The
     split moves by ≈ 0.05 e.

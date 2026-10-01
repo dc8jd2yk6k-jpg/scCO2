@@ -71,4 +71,6 @@ Ionisation energy (ΔSCF): adiabatic 5.01 eV, vertical 5.13 eV.
 | layer gap (eV) | 1.91 | 1.91 | 1.91 |
 | N(E_F), layer states (states/eV/ZrNCl) | 0.266 | 0.261 | 0.268 |
 
+Spin-polarised SCF (6×6×1, started from 1 μB on Co): total moment -0.000 μB, Co -0.000 μB, Σ|m| 0.001 μB; E(spin) − E(non-spin) = -0.0 meV per cell.
+
 Isolated molecule: ε_SOMO(Co(Cp)₂) − ε_LUMO(Co(Cp)₂⁺) at the neutral geometry = 4.91 eV (PBE curvature of E(N) for the e₁″ level; zero for the exact functional).
