@@ -66,7 +66,13 @@
 | intercalate | 9×9×1 (σ = 0.02 eV) | tetrahedron on the 9×9×1 SCF mesh | unfolded onto Γ–M–K–Γ of the 1×1 cell (56 k) |
 | intercalate checks (+U, guest shift, spin, fragments) | 6×6×1 (σ = 0.02 eV) | tetrahedron on the SCF mesh | – |
 
-All meshes contain the in-plane K point, the conduction-band minimum.
+All electronic-structure meshes contain the in-plane K point, the conduction-band minimum.
+
+k-point convergence (pristine, 600 eV, `01_pristine/convergence_k.py`, `results/convergence.json`):
+- The total energy differs by ≤ 0.1 meV/atom between the 6×6×2, 8×8×2 and 12×12×3 meshes.
+- The forces differ by < 1 meV/Å.
+- The 8×8×2 relaxation mesh does not contain K. That matters for the gap (1.90 instead of 1.78 eV), not for the energy
+  or forces of the insulator.
 
 ## Analysis
 - **Charge transfer in the intercalate**, four independent measures:
