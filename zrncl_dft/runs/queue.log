@@ -47,3 +47,9 @@
 2026-10-01 01:00:06 START [13] 03_intercalate/electronic.py --stage shift --dV 0.5
 2026-10-01 01:51:15 END   [13] rc=0 03_intercalate/electronic.py --stage shift --dV 0.5
 2026-10-01 01:51:15 START [14] 03_intercalate/molecule.py
+2026-10-01 01:58:19 END   [14] rc=1 03_intercalate/molecule.py
+2026-10-01 01:58:19 START [15] 03_intercalate/molecule.py
+2026-10-01 01:58:26 END   [15] rc=1 03_intercalate/molecule.py
+2026-10-01 01:58:26 START [16] 01_pristine/relax.py --mode pbe
+2026-10-01 02:04:30 END   [16] rc=0 01_pristine/relax.py --mode pbe
+2026-10-01 02:04:30 START [17] 03_intercalate/molecule.py

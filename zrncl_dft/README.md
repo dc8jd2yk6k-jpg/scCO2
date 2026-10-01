@@ -19,10 +19,15 @@ guest–host compound.
 
 ## 1. Pristine β-ZrNCl
 
-**Structure.** The internal coordinates barely move under PBE+D3 relaxation at the experimental cell.
-The largest shift is 0.022 Å, on Cl.
+**Structure.** The internal coordinates barely move when relaxed at the experimental cell, with or without D3. The
+largest shift is 0.02–0.03 Å, on Cl. At fixed cell, D3 changes the bond lengths by at most 0.005 Å.
 
-PRISTINE_STRUCTURE_TABLE
+| hexagonal setting, all atoms on 6c (0,0,z) | a (Å) | c (Å) | z(Zr) | z(N) | z(Cl) | Zr–N ×3 (Å) | Zr–N apical (Å) | Zr–Cl ×3 (Å) |
+|---|---|---|---|---|---|---|---|---|
+| starting model | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |
+| PBE, experimental cell | 3.6046 | 27.672 | 0.1195 | 0.1976 | 0.3878 | 2.129 | 2.164 | 2.751 |
+| PBE+D3(BJ), experimental cell | 3.6046 | 27.672 | 0.1196 | 0.1976 | 0.3880 | 2.129 | 2.159 | 2.749 |
+CELL_RELAXED_ROW
 
 **Electronic structure** ([figure](figures/pristine_bands_dos.png)):
 
@@ -91,7 +96,8 @@ N(E_F) in states eV⁻¹ ZrNCl⁻¹ (both spins); self-consistent values from te
    - Both effects are electrostatic: the added electrons sit in the Zr planes and the compensating charge is spread
      through the van der Waals gap. In the real intercalate that charge sits on the guests in the gallery.
 3. **The lattice responds.** Relaxing the internal coordinates at x = 0.10 changes the bonds as follows:
-   - Zr–Cl lengthens by 0.020 Å and Zr–N shortens by 0.006 Å.
+   - Zr–Cl lengthens by 0.020 Å (2.751 → 2.771 Å) and the mean Zr–N shortens by 0.008 Å (2.138 → 2.130 Å). Both
+     structures are PBE at the experimental cell.
    - The energy drops by 18 meV per cell.
    - The Γ valley moves up to 1.06 eV above the K minimum, while E_F − E_CBM barely changes (398 meV).
 
@@ -126,11 +132,11 @@ misses is the ≈ 65 meV relative shift of the valence band.
 
 **Relaxed geometry** ([figure](figures/structures.png)):
 
-| ZrNCl layer | pristine (PBE+D3) | jellium x = 0.10 (PBE) | in ZrNCl{Co(Cp)₂}₀.₁₀ (PBE+D3) |
-|---|---|---|---|
-| Zr–N (mean of 4) | 2.136 Å | 2.130 Å | 2.131 Å (2.120–2.157) |
-| Zr–Cl (×3) | 2.749 Å | 2.770 Å | 2.780 Å (2.769–2.790) |
-| Cl–Cl slab thickness | 6.199 Å | 6.227 Å | 6.264 Å |
+| ZrNCl layer | pristine (PBE) | jellium x = 0.10 (PBE) | pristine (PBE+D3) | in ZrNCl{Co(Cp)₂}₀.₁₀ (PBE+D3) |
+|---|---|---|---|---|
+| Zr–N (mean of 4) | 2.138 Å | 2.130 Å | 2.136 Å | 2.131 Å (2.120–2.157) |
+| Zr–Cl (×3) | 2.751 Å | 2.771 Å | 2.749 Å | 2.780 Å (2.769–2.790) |
+| Cl–Cl slab thickness | 6.211 Å | 6.227 Å | 6.199 Å | 6.264 Å |
 
 GUEST_TABLE
 
@@ -138,10 +144,12 @@ GUEST_TABLE
   Co–(Cp centroid) = 1.659 Å, which is cobaltocenium-like. See the isolated-molecule references in the table.
 - The uppermost and lowermost Cp hydrogens sit in the Cl hollows of the two walls: H···Cl 2.70 Å, Co 4.2 Å above the
   Cl plane.
-- The host responds as it does to jellium doping, only more strongly:
-  - Zr–Cl lengthens from 2.749 to 2.780 Å (jellium x = 0.10: 2.770 Å).
-  - The Cl–Cl slab thickness grows by 0.065 Å.
-  - Zr–N is unchanged, 2.131 Å on average.
+- The host responds as it does to jellium doping, only more strongly. Each comparison below is like-for-like
+  (PBE+D3 with PBE+D3, PBE with PBE):
+  - Zr–Cl lengthens by 0.031 Å; jellium doping at x = 0.10 gives 0.020 Å.
+  - Zr–N shortens slightly in both cases (−0.005 / −0.008 Å).
+  - The Cl–Cl slab thickness grows by 0.065 Å, four times the jellium value (0.016 Å). The positively charged guests
+    pull the Cl planes outward, an effect the uniform jellium background cannot produce.
 
 **Electronic structure and charge transfer** (PBE; SCF on 9×9×1 k with 0.02 eV Fermi–Dirac smearing; tetrahedron
 DOS; E_F from electron counting):

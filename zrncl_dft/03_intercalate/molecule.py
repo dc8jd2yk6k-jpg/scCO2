@@ -24,12 +24,15 @@ os.makedirs(RUN, exist_ok=True)
 
 
 def calc(tag, charge, spin):
-    # The neutral molecule has one electron in the degenerate e1'' pair.  With
-    # 0.01 eV smearing and the default mixer its SCF sloshed between the two
-    # orbitals for 180+ iterations, so: 0.05 eV smearing (the pair stays
-    # half-filled; the extrapolated energy is used) and a slower mixer.
+    # The neutral molecule has one electron in the degenerate e1'' pair, which
+    # is Jahn-Teller/orbital-polarisation unstable: with 0.01 eV and 0.05 eV
+    # smearing the SCF kept jumping between the half/half solution and an
+    # orbitally polarised one (~0.05 eV lower) without converging.  0.1 eV
+    # smearing stabilises the symmetric half/half solution (the D5h-averaged
+    # molecule; the IE is then ~0.05 eV too low).  The closed-shell cation,
+    # with a ~2 eV HOMO-LUMO gap, is unaffected by the smearing.
     return GPAW(mode='fd', h=0.18, xc=XC, charge=charge, spinpol=spin,
-                occupations=FermiDirac(0.05, fixmagmom=spin),
+                occupations=FermiDirac(0.1, fixmagmom=spin),
                 mixer=Mixer(0.05, 5, 50.0), maxiter=500,
                 convergence={'energy': 1e-6, 'density': 1e-5},
                 txt=os.path.join(RUN, f'{tag}.txt'))
