@@ -211,7 +211,7 @@ on a 6×6×1 mesh with σ = 0.02 eV (PBE on that mesh is the reference column):
 | guest e₁″ band relative to E_F | −0.00 … +0.12 eV | +0.01 … +0.21 eV | +0.01 … +0.14 eV |
 | top of the occupied Co 3d (a₁′/e₂′) levels | −2.84 eV | −3.97 eV | −2.82 eV |
 
-On this coarse mesh the state counts carry an uncertainty of about ±0.05 e: the two columns of each case add up to
+On this coarse mesh the state counts are uncertain by up to ±0.1 e: the first two rows of each column add up to
 0.91–1.03 instead of 1. The shift of E_F − E_CBM, read with the layer DOS of 2.66 states eV⁻¹ per cell, measures the
 change in the layer's filling independently.
 
