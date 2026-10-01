@@ -42,9 +42,11 @@
     - The relaxation keeps the Cm mirror plane of the starting model.
     - Abandoned approaches: an LCAO/dzp pre-relaxation (slower per SCF than plane waves) and PreconLBFGS (its line
       search cost 2–3 SCFs per step).
-  - `03_intercalate/symmetry_check.py` restarts from the relaxed structure with the mirror broken: guest tilted by 8°,
-    rotated by 6° about the layer normal, all atoms displaced randomly by 0.03 Å. It tests whether the
-    axis-parallel orientation is a minimum.
+  - `03_intercalate/symmetry_check.py` tests whether the axis-parallel orientation is a minimum.
+    - It restarts from the relaxed structure with the guest rotated rigidly, by 8° out of the layer plane and 6° about
+      the layer normal, which breaks the mirror.
+    - It then relaxes with the same settings (BFGS, fmax 0.05 eV/Å, at most 40 steps).
+    - `analysis/symcheck_progress.py` follows the energy and the axis orientation step by step.
 - **Isolated Co(Cp)₂ (S = ½) and Co(Cp)₂⁺ (S = 0)**: real-space PAW (h = 0.18 Å, 5.5 Å vacuum) with open boundaries,
   so the cation needs no charged-cell correction.
   - These calculations give the Co–C fingerprints of the oxidation state, the ΔSCF ionisation energies and PBE's

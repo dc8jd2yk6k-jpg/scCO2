@@ -25,3 +25,4 @@
 01_pristine/convergence_k.py
 01_pristine/relax.py --mode pbed3_cell
 03_intercalate/symmetry_check.py
+03_intercalate/symmetry_check.py
