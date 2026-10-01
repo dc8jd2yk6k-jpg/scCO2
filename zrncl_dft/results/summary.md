@@ -2,7 +2,7 @@
 
 | | a (Å) | c (Å) | z(Zr) | z(N) | z(Cl) | Zr–N ×3 (Å) | Zr–N apical (Å) | Zr–Cl ×3 (Å) |
 |---|---|---|---|---|---|---|---|---|
-| starting model (lit.) | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |
+| starting model (exp. cell) | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |
 | PBE+D3(BJ), exp. cell | 3.6046 | 27.672 | 0.1196 | 0.1976 | 0.3880 | 2.129 | 2.159 | 2.749 |
 
 ### Pristine β-ZrNCl: electronic structure (PBE)
@@ -49,13 +49,13 @@ N(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS 0.274 states/eV/ZrNCl ⇒
 
 ### Charge-split checks (6×6×1 k, Fermi–Dirac 0.02 eV, same geometry)
 
-| | PBE | PBE+U (U_eff = 4 eV, Co 3d) |
-|---|---|---|
-| electrons in ZrNCl CB states, per guest | 0.78 | 0.80 |
-| electrons in guest states near E_F | 0.25 | 0.16 |
-| x_eff (e⁻/ZrNCl) | 0.078 | 0.080 |
-| E_F − E_CBM(layer) (meV) | 292 | 321 |
-| guest states within 1 eV of E_F (eV) | -0.00 … +0.12 | +0.01 … +0.21 |
-| top of the occupied Co 3d (a₁′/e₂′) levels (eV) | -2.84 | -3.97 |
-| layer gap (eV) | 1.91 | 1.91 |
-| N(E_F), layer states (states/eV/ZrNCl) | 0.266 | 0.261 |
+| | PBE | PBE+U (U_eff = 4 eV, Co 3d) | PBE, guest levels +0.5 eV |
+|---|---|---|---|
+| electrons in ZrNCl CB states, per guest | 0.78 | 0.80 | 0.82 |
+| electrons in guest states near E_F | 0.25 | 0.16 | 0.09 |
+| x_eff (e⁻/ZrNCl) | 0.078 | 0.080 | 0.082 |
+| E_F − E_CBM(layer) (meV) | 292 | 321 | 333 |
+| guest states within 1 eV of E_F (eV) | -0.00 … +0.12 | +0.01 … +0.21 | +0.01 … +0.14 |
+| top of the occupied Co 3d (a₁′/e₂′) levels (eV) | -2.84 | -3.97 | -2.82 |
+| layer gap (eV) | 1.91 | 1.91 | 1.91 |
+| N(E_F), layer states (states/eV/ZrNCl) | 0.266 | 0.261 | 0.268 |

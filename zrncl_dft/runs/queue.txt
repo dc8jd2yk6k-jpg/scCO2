@@ -12,6 +12,7 @@
 03_intercalate/electronic.py --stage scfU --U 0
 03_intercalate/molecule.py
 03_intercalate/electronic.py --stage shift --dV 0.5
+03_intercalate/molecule.py
 01_pristine/relax.py --mode pbe
 03_intercalate/electronic.py --stage fragments
 03_intercalate/electronic.py --stage spin

@@ -35,7 +35,7 @@ if rel:
     out.append('### Pristine β-ZrNCl: structure (R-3m, 6c sites (0,0,z))\n')
     out.append('| | a (Å) | c (Å) | z(Zr) | z(N) | z(Cl) | Zr–N ×3 (Å) | Zr–N apical (Å) | Zr–Cl ×3 (Å) |')
     out.append('|---|---|---|---|---|---|---|---|---|')
-    out.append('| starting model (lit.) | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |')
+    out.append('| starting model (exp. cell) | 3.6046 | 27.672 | 0.1196 | 0.1981 | 0.3888 | 2.126 | 2.172 | 2.735 |')
     for tag, lab in [('pbe', 'PBE, exp. cell'), ('pbed3', 'PBE+D3(BJ), exp. cell'),
                      ('pbed3_cell', 'PBE+D3(BJ), cell relaxed (800 eV)')]:
         r = rel.get('runs', {}).get(tag)

@@ -13,7 +13,7 @@ import sys
 import numpy as np
 from ase.io import write
 from ase.optimize import BFGS
-from gpaw import GPAW, FermiDirac
+from gpaw import GPAW, FermiDirac, Mixer
 from gpaw.mpi import world
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -24,8 +24,13 @@ os.makedirs(RUN, exist_ok=True)
 
 
 def calc(tag, charge, spin):
+    # The neutral molecule has one electron in the degenerate e1'' pair.  With
+    # 0.01 eV smearing and the default mixer its SCF sloshed between the two
+    # orbitals for 180+ iterations, so: 0.05 eV smearing (the pair stays
+    # half-filled; the extrapolated energy is used) and a slower mixer.
     return GPAW(mode='fd', h=0.18, xc=XC, charge=charge, spinpol=spin,
-                occupations=FermiDirac(0.01, fixmagmom=spin),
+                occupations=FermiDirac(0.05, fixmagmom=spin),
+                mixer=Mixer(0.05, 5, 50.0), maxiter=500,
                 convergence={'energy': 1e-6, 'density': 1e-5},
                 txt=os.path.join(RUN, f'{tag}.txt'))
 

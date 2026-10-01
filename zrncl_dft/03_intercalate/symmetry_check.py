@@ -57,7 +57,7 @@ from dftd3.ase import DFTD3  # noqa: E402
 atoms.calc = SumCalculator([dft, DFTD3(method='PBE', damping='d3bj')])
 opt = BFGS(atoms, maxstep=0.1, logfile=os.path.join(RUN, 'symcheck.log'),
            trajectory=os.path.join(RUN, 'symcheck.traj'))
-opt.run(fmax=0.03, steps=120)
+opt.run(fmax=0.03, steps=60)      # capped: ~4 min per step
 e = atoms.get_potential_energy()
 res = {'E_symmetric': e_ref, 'E_broken_start_relaxed': e, 'dE_meV': 1e3 * (e - e_ref),
        'steps': opt.nsteps, 'fmax': float(np.linalg.norm(atoms.get_forces(), axis=1).max()),

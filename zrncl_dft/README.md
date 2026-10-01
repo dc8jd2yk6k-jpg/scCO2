@@ -161,7 +161,54 @@ DOS; E_F from electron counting):
 | Bader charge of Co(Cp)₂ (all-electron density) | **+0.64 e** (Co +0.59) | – |
 | Bader: Zr / N / Cl (pristine: +2.27 / −1.60 / −0.67) | +2.24 / −1.61 / −0.69 | – |
 
-MAGNETISM_AND_U
+**Magnetism, +U and guest-level checks.** Is the incomplete transfer robust? Three checks, all at the same geometry
+on a 6×6×1 mesh with σ = 0.02 eV (PBE on that mesh is the reference column):
+
+![checks](figures/intercalate_checks_dos.png)
+
+| per Co(Cp)₂ | PBE | PBE+U, U_eff = 4 eV on Co 3d | PBE, guest levels +0.5 eV |
+|---|---|---|---|
+| electrons in ZrNCl conduction-band states | 0.78 | 0.80 | 0.82 |
+| electrons left in guest states at E_F | 0.25 | 0.16 | 0.09 |
+| E_F − E_CBM(ZrNCl layer) | 292 meV | 321 meV | 333 meV |
+| guest e₁″ band relative to E_F | −0.00 … +0.12 eV | +0.01 … +0.21 eV | +0.01 … +0.14 eV |
+| top of the occupied Co 3d (a₁′/e₂′) levels | −2.84 eV | −3.97 eV | −2.82 eV |
+
+On this coarse mesh the state counts carry an uncertainty of about ±0.05 e: the two columns of each case add up to
+0.91–1.03 instead of 1. The shift of E_F − E_CBM, read with the layer DOS of 2.66 states eV⁻¹ per cell, measures the
+change in the layer's filling independently.
+
+- **Spin.** ⟪SPIN⟫
+- **+U on Co 3d barely matters.**
+  - U_eff = 4 eV pushes the filled a₁′/e₂′ levels down by 1.1 eV but lifts the e₁″ band by only 0.01–0.09 eV. The
+    split moves by ≈ 0.05 e.
+  - The reason is the Co 3d occupation matrix of the PBE ground state, in the frame of the Cp–Co–Cp axis:
+    d_z² (a₁′) 0.99, d_xy/d_x²−y² (e₂′) 0.93, d_xz/d_yz (e₁″) 0.62–0.65 per spin orbital.
+  - The e₁″ orbitals mix covalently with the filled Cp π e₁ combination, so their d occupation stays near ½ even
+    though the antibonding e₁″* level is almost empty. Dudarev's correction shifts an orbital by U(½ − n), which is
+    therefore almost zero for exactly the level in question.
+  - Correcting this level needs a correction on the molecular orbital, not on the Co atom.
+- **Raising the guest levels barely moves them.**
+  - An external potential of +0.5 eV on the guest (smooth spheres around Co and C) moves only 0.11–0.15 e more into
+    the layer: E_F − E_CBM rises by 41 meV.
+  - The e₁″ band stays at E_F.
+  - Self-consistency screens almost 90 % of the applied shift. In absolute terms the guest levels rise by
+    0.17–0.18 eV, but the layer bands rise by 0.11–0.12 eV with them.
+  - The restoring force is ≈ 3–4 eV per transferred electron per guest.
+- **Why: the electrostatics of the gallery.** It takes a large voltage to charge the gallery.
+  - The guest plane sits 6.06 Å from the nearest Zr plane on either side, with one guest per 56.3 Å².
+  - Moving one electron per guest from that plane to the two Zr planes builds up a double-layer potential of 9.8 V
+    (parallel-plate estimate, unscreened). A gallery dielectric constant of 2.5–3 brings this down to the 3–4 eV
+    found above.
+  - This potential is classical electrostatics, present in any functional; it is not a self-interaction artefact.
+  - It pins the guest's donor level to E_F once ≈ 0.8 e have been transferred. Completing the transfer would need that
+    level about 1 eV higher (≈ 0.2 e × 4 eV, plus clearing the band of E_F) than PBE places it.
+- **What this means.**
+  - The incomplete transfer is not a fragile detail that a modest correction to PBE removes.
+  - An error of 1 eV in a molecule–host level alignment is within the range typical of semilocal DFT, but it could
+    point either way. PBE places the nearly empty guest level too deep, which favours less transfer. It also places
+    the ZrNCl conduction band too low (gap 1.77 eV vs ~3 eV), which favours more.
+  - Best estimate: **0.8–0.9 e per guest, x_eff = 0.08–0.09**. Complete ionisation cannot be excluded.
 
 **Unfolded band structure.** The supercell states are projected back onto the 1×1 ZrNCl zone. The spectral weights
 are clean: 93 % of the layer states have weight > 0.8 or < 0.2.
@@ -215,8 +262,8 @@ All three panels are aligned at the K conduction-band minimum of the ZrNCl layer
 ZrNCl{Co(Cp)₂}₀.₁₀ quantitatively, whether as a rigid band or on jellium. The guest has three roles:
 1. It sets x.
 2. It opens the gallery, which decouples the layers but changes nothing at K.
-3. It adds flat molecular levels. The occupied Co 3d levels lie ~3 eV below E_F; the e₁″ level lies at E_F in PBE,
-   which the checks above suggest is an artefact.
+3. It adds flat molecular levels. The occupied Co 3d levels lie ~3 eV below E_F. The e₁″ level is pinned at E_F by
+   the electrostatics of the charged gallery and holds the 0.1–0.2 e that the host does not receive.
 
 ## 5. What this says about the paper's observations
 
@@ -242,20 +289,25 @@ superconductivity is confined to the ZrN layers."** The calculations supply the 
   - At 14.7 Å, with real guests in the gallery, the layer bands near E_F are those of the doped host.
   - The Fermi-level electrons are therefore two-dimensional and insensitive to the gallery height and its contents. A
     guest that changes the spacing, Cp* instead of Cp, should not change T_c.
-- **The guests are spectators.** Their occupied levels lie ~3 eV below E_F.
-  - If they kept a magnetic moment (neutral Co(Cp)₂ has S = ½), one would expect pair breaking.
-  - The identical T_c of the cobaltocene and alkali-metal intercalates fits closed-shell cobaltocenium guests better.
-    That is also where the PBE checks point (below).
+- **The guests are spectators.** Their occupied levels lie ~3 eV below E_F. Their e₁″ level at E_F has a bandwidth of
+  only 0.1 eV, and it does not reshape the layer's conduction band (section 3, unfolded bands).
 
 **3. The doping level.** Elemental analysis gives x = 0.10 guests per ZrNCl. Fogg et al. assume one electron per
 guest.
-- PBE transfers 0.76–0.87 e per guest. Bader puts +0.64 e on Co(Cp)₂.
-- The guest geometry, Co–C 2.058 Å, is that of the cation.
-- Adding U on Co 3d does not change the split (0.80 e at U_eff = 4 eV). Raising the guest levels does: see
-  "Magnetism, +U and guest-level checks" in section 3.
-- The most likely situation is complete ionisation, Co(Cp)₂⁺ + 0.10 e⁻/ZrNCl. PBE's fractional occupation of the
-  e₁″ level is the textbook signature of its delocalisation error.
-- Either way the doping lies in the flat-N(E_F) window.
+- **How much charge moves.** PBE transfers most but not all of each guest's electron.
+  - The estimates: 0.76 e from state counting, 0.87 e from the Luttinger count, and 0.8–0.9 e in the +U and
+    guest-shift checks. Bader puts +0.64 e on Co(Cp)₂.
+  - The host is therefore doped to x_eff = 0.08–0.09 rather than 0.10.
+- **Why the transfer stops short.** The limit is the electrostatics of the charged gallery. It pins the guest's e₁″
+  level to E_F (section 3).
+  - Complete transfer would need the donor level about 1 eV higher than PBE puts it. That is within the uncertainty of
+    a semilocal functional for this alignment, so neither outcome can be excluded.
+- **What a fractional charge would mean in a real crystal.** Each molecule carries an integer charge. A fractional
+  average therefore means a mixture: Co(Cp)₂⁺ plus 10–20 % neutral Co(Cp)₂ with S = ½.
+  - A Curie term in the normal-state susceptibility would reveal such neutral guests. The paper shows no normal-state
+    susceptibility.
+  - That T_c equals that of the alkali-metal intercalates argues weakly against many magnetic guests near the layers.
+- **Either way, the doping lies in the flat-N(E_F) window**, so points 1 and 2 do not depend on the exact split.
 
 **4. Superconducting length scales.** This is an order-of-magnitude consistency check only.
 - **From the bands at x = 0.10:** ħv_F = 2.9–3.5 eV Å, i.e. v_F = 4.4–5.3 × 10⁵ m/s (the pockets are trigonally
@@ -288,12 +340,13 @@ guest.
 
 ## Caveats
 
-- **Functional.** PBE underestimates the host gap.
-  - Being semilocal, it also favours fractional charges, which affects where the guest's frontier level sits relative
-    to the host E_F.
-  - The charge split (0.76–0.87 e per guest instead of 1) is the result most exposed to this error. Section 3 brackets
-    it with the +U and guest-level checks.
-  - A hybrid functional would be the proper test. It was out of reach for a 51-atom metallic cell on this machine.
+- **Functional.** PBE underestimates the host gap and misplaces molecular levels.
+  - The charge split (0.8–0.9 e per guest instead of 1) depends on how the cobaltocene donor level aligns with the
+    ZrNCl conduction band.
+  - The +U and guest-shift checks show that the electrostatics of the gallery stiffly pin this alignment. Still, an
+    alignment error of ~1 eV would be enough to complete the transfer.
+  - Hybrid-functional or GW level alignment would be the proper test. It was out of reach for a 51-atom metallic cell
+    on this machine.
 - **Ordered model.** The intercalate is an ordered, AA-stacked model at exactly x = 1/10.
   - The real compound is powder-crystalline, probably with disordered guests and its own stacking.
   - The resistivity upturn below ~70 K reported in the paper (weak localisation) is a disorder effect that this model
@@ -308,19 +361,23 @@ guest.
 
 ## Reproducing
 
-All jobs were run through `runs/queue.sh` (4 MPI ranks each), in this order:
+All jobs were run through `runs/queue.sh` (4 MPI ranks each). `runs/queue.txt` and `runs/queue.log` record the exact
+order and timing. In short:
 
 ```bash
 mpiexec -n 4 python 01_pristine/convergence.py            # cutoff scan -> analysis/parse_convergence.py
+mpiexec -n 4 python 01_pristine/convergence_k.py          # k-mesh check
 mpiexec -n 4 python 01_pristine/relax.py --mode pbed3     # also --mode pbe, --mode pbed3_cell
-python 03_intercalate/build.py                             # ordered x = 1/10 model
 mpiexec -n 4 python 01_pristine/electronic.py              # bands, DOS/PDOS, masses
-mpiexec -n 4 python 03_intercalate/relax.py --stage pw     # PBE+D3 relaxation of the intercalate
-mpiexec -n 4 python 02_doped/series.py                     # jellium doping series + relaxation at x=0.1
+mpiexec -n 4 python 02_doped/series.py                     # jellium doping series + relaxation at x = 0.1
 mpiexec -n 4 python 01_pristine/electronic.py --charge -0.2 --tag x0.10 --kscf 18 18 3
-mpiexec -n 4 python 03_intercalate/electronic.py --stage scf   # then dos, unfold, charges, spin, fragments
+python 03_intercalate/build.py                             # ordered x = 1/10 model
+mpiexec -n 4 python 03_intercalate/relax.py --stage pw     # PBE+D3 relaxation of the intercalate
+mpiexec -n 4 python 03_intercalate/electronic.py --stage scf   # then --stage unfold, charges,
+                                                                # scfU --U 4, scfU --U 0, shift --dV 0.5,
+                                                                # fragments, spin
 mpiexec -n 4 python 03_intercalate/molecule.py             # isolated Co(Cp)2 / Co(Cp)2+
-mpiexec -n 4 python 01_pristine/convergence_k.py
+mpiexec -n 4 python 03_intercalate/symmetry_check.py       # orientation test without the mirror plane
 python 03_intercalate/geometry.py
 python analysis/rigid_band.py && python analysis/plot_*.py && python analysis/summary.py
 ```

@@ -138,7 +138,49 @@ def drho():
     print('wrote drho')
 
 
+def checks():
+    """Layer vs guest DOS near E_F for the charge-split checks (6x6x1 mesh)."""
+    cases = [('_U0', 'PBE'), ('_U4', 'PBE+U, U$_{eff}$ = 4 eV on Co 3d'),
+             ('_shift0.5', 'PBE, guest levels raised by 0.5 eV')]
+    keys = {'_U0': 'Ucheck_U0', '_U4': 'Ucheck_U4', '_shift0.5': 'shiftcheck_shift0.5'}
+    js = json.load(open(os.path.join(RES, 'intercalate_electronic.json')))
+    cases = [(t, lab) for t, lab in cases
+             if os.path.exists(os.path.join(RES, f'intercalate_dos{t}.npz'))]
+    if not cases:
+        return
+    fig, axes = plt.subplots(len(cases), 1, figsize=(6.4, 2.0 * len(cases) + 0.6),
+                             sharex=True, gridspec_kw={'hspace': 0.3})
+    axes = np.atleast_1d(axes)
+    for ax, (t, lab) in zip(axes, cases):
+        d = np.load(os.path.join(RES, f'intercalate_dos{t}.npz'), allow_pickle=True)
+        e = d['energies'] - float(d['ef'])
+        pd = dict(zip(list(d['keys']), d['pdos']))
+        layer = pd['Zr-d'] + pd['N-p'] + pd['Cl-p']
+        guest = pd['Co-d'] + pd['C-p'] + pd['H-s']
+        ax.fill_between(e, 0, smooth(layer, e, 0.04), color=GRID, lw=0,
+                        label='ZrNCl layer (Zr 4d + N 2p + Cl 3p)')
+        ax.plot(e, smooth(guest, e, 0.04), color=ORANGE, lw=1.3,
+                label='Co(Cp)₂ guest (Co 3d + C 2p + H 1s)')
+        ax.axvline(0, color=MUTED, lw=0.8, ls='--')
+        ax.set_ylim(0, 12)
+        ax.set_yticks([0, 5, 10])
+        c = js.get(keys[t])
+        ax.set_title(lab, loc='left', fontsize=9, color=INK2)
+        if c:     # numbers go into the empty layer gap
+            ax.text(-2.0, 11.2, f"ZrNCl CB: {c['n_el_in_layer_CB_states']:.2f} e⁻\n"
+                    f"guest: {c['n_el_in_guest_states_near_EF']:.2f} e⁻\n(per Co(Cp)₂)",
+                    va='top', ha='left', fontsize=8, color=INK)
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc='lower center', ncol=2, bbox_to_anchor=(0.5, -0.04), fontsize=8)
+    axes[-1].set_xlim(-4.6, 1.2)
+    axes[-1].set_xlabel('E − E$_F$ (eV)')
+    fig.text(0.04, 0.5, 'PDOS (states/eV/cell)', rotation=90, va='center', fontsize=10)
+    fig.savefig(os.path.join(FIG, 'intercalate_checks_dos.png'), bbox_inches='tight')
+    print('wrote checks')
+
+
 if __name__ == '__main__':
     pdos()
     unfold()
     drho()
+    checks()

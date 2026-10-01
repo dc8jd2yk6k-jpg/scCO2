@@ -43,3 +43,7 @@
 2026-09-30 23:58:14 START [11] 03_intercalate/electronic.py --stage scfU --U 0
 2026-10-01 00:47:12 END   [11] rc=0 03_intercalate/electronic.py --stage scfU --U 0
 2026-10-01 00:47:12 START [12] 03_intercalate/molecule.py
+2026-10-01 01:00:06 END   [12] rc=1 03_intercalate/molecule.py
+2026-10-01 01:00:06 START [13] 03_intercalate/electronic.py --stage shift --dV 0.5
+2026-10-01 01:51:15 END   [13] rc=0 03_intercalate/electronic.py --stage shift --dV 0.5
+2026-10-01 01:51:15 START [14] 03_intercalate/molecule.py
