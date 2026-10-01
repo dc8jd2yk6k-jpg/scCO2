@@ -53,3 +53,7 @@
 2026-10-01 01:58:26 START [16] 01_pristine/relax.py --mode pbe
 2026-10-01 02:04:30 END   [16] rc=0 01_pristine/relax.py --mode pbe
 2026-10-01 02:04:30 START [17] 03_intercalate/molecule.py
+2026-10-01 02:35:59 END   [17] rc=1 03_intercalate/molecule.py
+2026-10-01 02:35:59 START [18] 03_intercalate/molecule.py
+2026-10-01 02:39:36 END   [18] rc=42 03_intercalate/molecule.py
+2026-10-01 02:39:36 START [19] 03_intercalate/electronic.py --stage fragments

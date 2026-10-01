@@ -63,7 +63,7 @@ res = {'E_symmetric': e_ref, 'E_broken_start_relaxed': e, 'dE_meV': 1e3 * (e - e
        'steps': opt.nsteps, 'fmax': float(np.linalg.norm(atoms.get_forces(), axis=1).max()),
        'guest_symmetric': cocp2_info(ref.positions[-NMOL:]),
        'guest_broken_relaxed': cocp2_info(atoms.positions[-NMOL:])}
+write(os.path.join(RUN, 'symcheck_relaxed.traj'), atoms)     # all ranks (ASE handles I/O)
 if world.rank == 0:
-    write(os.path.join(RUN, 'symcheck_relaxed.traj'), atoms)
     json.dump(res, open(os.path.join(RESULTS, 'intercalate_symcheck.json'), 'w'), indent=2)
     print(json.dumps(res, indent=1))

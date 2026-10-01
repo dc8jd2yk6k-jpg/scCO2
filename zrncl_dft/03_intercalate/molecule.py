@@ -11,9 +11,9 @@ import os
 import sys
 
 import numpy as np
-from ase.io import write
+from ase.io import read, write
 from ase.optimize import BFGS
-from gpaw import GPAW, FermiDirac, Mixer
+from gpaw import GPAW, FermiDirac
 from gpaw.mpi import world
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -25,16 +25,17 @@ os.makedirs(RUN, exist_ok=True)
 
 def calc(tag, charge, spin):
     # The neutral molecule has one electron in the degenerate e1'' pair, which
-    # is Jahn-Teller/orbital-polarisation unstable: with 0.01 eV and 0.05 eV
-    # smearing the SCF kept jumping between the half/half solution and an
-    # orbitally polarised one (~0.05 eV lower) without converging.  0.1 eV
-    # smearing stabilises the symmetric half/half solution (the D5h-averaged
-    # molecule; the IE is then ~0.05 eV too low).  The closed-shell cation,
-    # with a ~2 eV HOMO-LUMO gap, is unaffected by the smearing.
+    # is Jahn-Teller/orbital-polarisation unstable: with 0.01 eV smearing the
+    # SCF kept jumping between the half/half solution and an orbitally
+    # polarised one (~0.05 eV lower).  0.1 eV smearing stabilises the
+    # symmetric half/half solution (the D5h-averaged molecule; its energy, and
+    # so the IE, is then ~0.05 eV too high/low).  A slow mixer (0.05, 5, 50)
+    # made the first SCF take 377 iterations, so the default molecular mixer is
+    # kept, with the GPAW default density tolerance (1e-4 per electron).
+    # The closed-shell cation (~2 eV HOMO-LUMO gap) is unaffected.
     return GPAW(mode='fd', h=0.18, xc=XC, charge=charge, spinpol=spin,
-                occupations=FermiDirac(0.1, fixmagmom=spin),
-                mixer=Mixer(0.05, 5, 50.0), maxiter=500,
-                convergence={'energy': 1e-6, 'density': 1e-5},
+                occupations=FermiDirac(0.1, fixmagmom=spin), maxiter=500,
+                convergence={'energy': 1e-6, 'density': 1e-4},
                 txt=os.path.join(RUN, f'{tag}.txt'))
 
 
@@ -70,10 +71,14 @@ def frontier(calc, spin):
 
 
 res = {}
-for tag, charge, spin, mag in [('cocp2_neutral', 0, True, 1.0),
-                               ('cocp2_cation', 1, False, 0.0)]:
-    atoms = cocp2(co_c=2.10 if charge == 0 else 2.03)
-    atoms.center(vacuum=5.5)
+for tag, charge, spin, mag in [('cocp2_cation', 1, False, 0.0),      # robust one first
+                               ('cocp2_neutral', 0, True, 1.0)]:
+    done = os.path.join(RUN, f'{tag}_relaxed.traj')
+    if os.path.exists(done):          # restart: re-converge at the relaxed geometry
+        atoms = read(done)
+    else:
+        atoms = cocp2(co_c=2.10 if charge == 0 else 2.03)
+        atoms.center(vacuum=5.5)
     if spin:
         m = np.zeros(len(atoms))
         m[0] = mag
@@ -86,12 +91,14 @@ for tag, charge, spin, mag in [('cocp2_neutral', 0, True, 1.0),
     if spin:
         r['magmom'] = float(atoms.calc.get_magnetic_moment())
     res[tag] = r
+    # ASE's .traj writer talks to all MPI ranks: call it everywhere (a
+    # rank-0-only call crossed with GPAW's next broadcast and crashed the run)
+    write(done, atoms)
     if world.rank == 0:
-        write(os.path.join(RUN, f'{tag}_relaxed.traj'), atoms)
         print(tag, r['energy'], r['geometry'], flush=True)
+        save_json('molecule.json', res)          # partial results
 
 # vertical IE: cation at the neutral geometry
-from ase.io import read  # noqa: E402
 neu = read(os.path.join(RUN, 'cocp2_neutral_relaxed.traj'))
 neu.set_initial_magnetic_moments(None)
 neu.calc = calc('cocp2_cation_at_neutral', 1, False)

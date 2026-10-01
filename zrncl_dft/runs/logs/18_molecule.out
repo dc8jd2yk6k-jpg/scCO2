@@ -1,0 +1,107 @@
+cocp2_cation -128.22971499186275 {'Co-C_mean': 2.0451821228605764, 'Co-C_min': 2.0444327076366826, 'Co-C_max': 2.0459543057005853, 'Co-centroid': 1.6423393895078349, 'C-C_mean': 1.4327941255393781, 'C-H_mean': 1.0866031181006828}
+rank=3 L00: Traceback (most recent call last):
+rank=1 L00: Traceback (most recent call last):
+rank=1 L01:   File "/home/user/scCO2/zrncl_dft/03_intercalate/molecule.py", line 84, in <module>
+rank=1 L02:     trajectory=os.path.join(RUN, f'{tag}.traj')).run(fmax=0.02, steps=80)
+rank=1 L03:                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+rank=1 L04:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 269, in run
+rank=1 L05:     return Dynamics.run(self)
+rank=1 L06:            ^^^^^^^^^^^^^^^^^^
+rank=1 L07:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 156, in run
+rank=1 L08:     for converged in Dynamics.irun(self):
+rank=1 L09:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 122, in irun
+rank=1 L10:     self.atoms.get_forces()
+rank=1 L11:   File "/usr/lib/python3/dist-packages/ase/atoms.py", line 788, in get_forces
+rank=1 L12:     forces = self._calc.get_forces(self)
+rank=1 L13:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=1 L14:   File "/usr/lib/python3/dist-packages/ase/calculators/abc.py", line 23, in get_forces
+rank=1 L15:     return self.get_property('forces', atoms)
+rank=1 L16:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=1 L17:   File "/usr/lib/python3/dist-packages/ase/calculators/calculator.py", line 737, in get_property
+rank=1 L18:     self.calculate(atoms, [name], system_changes)
+rank=1 L19:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 412, in calculate
+rank=1 L20:     for _ in self.icalculate(atoms, properties, system_changes):
+rank=1 L21:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 433, in icalculate
+rank=1 L22:     self.initialize(atoms)
+rank=1 L23:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 672, in initialize
+rank=1 L24:     self._set_atoms(atoms)
+rank=1 L25:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 332, in _set_atoms
+rank=1 L26:     mpi.synchronize_atoms(self.atoms, self.world)
+rank=1 L27:   File "/usr/lib/python3/dist-packages/gpaw/mpi.py", line 847, in synchronize_atoms
+rank=1 L28:     positions, cell, numbers, pbc = broadcast(src, root=0, comm=comm)
+rank=1 L29:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=2 L00: Traceback (most recent call last):
+rank=2 L01:   File "/home/user/scCO2/zrncl_dft/03_intercalate/molecule.py", line 84, in <module>
+rank=2 L02:     trajectory=os.path.join(RUN, f'{tag}.traj')).run(fmax=0.02, steps=80)
+rank=2 L03:                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+rank=2 L04:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 269, in run
+rank=2 L05:     return Dynamics.run(self)
+rank=2 L06:            ^^^^^^^^^^^^^^^^^^
+rank=2 L07:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 156, in run
+rank=2 L08:     for converged in Dynamics.irun(self):
+rank=2 L09:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 122, in irun
+rank=2 L10:     self.atoms.get_forces()
+rank=2 L11:   File "/usr/lib/python3/dist-packages/ase/atoms.py", line 788, in get_forces
+rank=2 L12:     forces = self._calc.get_forces(self)
+rank=2 L13:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=2 L14:   File "/usr/lib/python3/dist-packages/ase/calculators/abc.py", line 23, in get_forces
+rank=2 L15:     return self.get_property('forces', atoms)
+rank=2 L16:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=2 L17:   File "/usr/lib/python3/dist-packages/ase/calculators/calculator.py", line 737, in get_property
+rank=2 L18:     self.calculate(atoms, [name], system_changes)
+rank=2 L19:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 412, in calculate
+rank=2 L20:     for _ in self.icalculate(atoms, properties, system_changes):
+rank=2 L21:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 433, in icalculate
+rank=2 L22:     self.initialize(atoms)
+rank=2 L23:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 672, in initialize
+rank=2 L24:     self._set_atoms(atoms)
+rank=2 L25:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 332, in _set_atoms
+rank=2 L26:     mpi.synchronize_atoms(self.atoms, self.world)
+rank=2 L27:   File "/usr/lib/python3/dist-packages/gpaw/mpi.py", line 847, in synchronize_atoms
+rank=2 L28:     positions, cell, numbers, pbc = broadcast(src, root=0, comm=comm)
+rank=2 L29:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=2 L30: ValueError: not enough values to unpack (expected 4, got 2)
+rank=1 L30: ValueError: not enough values to unpack (expected 4, got 2)
+GPAW CLEANUP (node 1): <class 'ValueError'> occurred.  Calling MPI_Abort!
+GPAW CLEANUP (node 2): <class 'ValueError'> occurred.  Calling MPI_Abort!
+rank=3 L01:   File "/home/user/scCO2/zrncl_dft/03_intercalate/molecule.py", line 84, in <module>
+rank=3 L02:     trajectory=os.path.join(RUN, f'{tag}.traj')).run(fmax=0.02, steps=80)
+rank=3 L03:                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+rank=3 L04:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 269, in run
+rank=3 L05:     return Dynamics.run(self)
+rank=3 L06:            ^^^^^^^^^^^^^^^^^^
+rank=3 L07:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 156, in run
+rank=3 L08:     for converged in Dynamics.irun(self):
+rank=3 L09:   File "/usr/lib/python3/dist-packages/ase/optimize/optimize.py", line 122, in irun
+rank=3 L10:     self.atoms.get_forces()
+rank=3 L11:   File "/usr/lib/python3/dist-packages/ase/atoms.py", line 788, in get_forces
+rank=3 L12:     forces = self._calc.get_forces(self)
+rank=3 L13:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=3 L14:   File "/usr/lib/python3/dist-packages/ase/calculators/abc.py", line 23, in get_forces
+rank=3 L15:     return self.get_property('forces', atoms)
+rank=3 L16:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=3 L17:   File "/usr/lib/python3/dist-packages/ase/calculators/calculator.py", line 737, in get_property
+rank=3 L18:     self.calculate(atoms, [name], system_changes)
+rank=3 L19:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 412, in calculate
+rank=3 L20:     for _ in self.icalculate(atoms, properties, system_changes):
+rank=3 L21:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 433, in icalculate
+rank=3 L22:     self.initialize(atoms)
+rank=3 L23:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 672, in initialize
+rank=3 L24:     self._set_atoms(atoms)
+rank=3 L25:   File "/usr/lib/python3/dist-packages/gpaw/calculator.py", line 332, in _set_atoms
+rank=3 L26:     mpi.synchronize_atoms(self.atoms, self.world)
+rank=3 L27:   File "/usr/lib/python3/dist-packages/gpaw/mpi.py", line 847, in synchronize_atoms
+rank=3 L28:     positions, cell, numbers, pbc = broadcast(src, root=0, comm=comm)
+rank=3 L29:     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+rank=3 L30: ValueError: not enough values to unpack (expected 4, got 2)
+GPAW CLEANUP (node 3): <class 'ValueError'> occurred.  Calling MPI_Abort!
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 3 in communicator MPI_COMM_WORLD
+with errorcode 42.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+[vm:06443] 2 more processes have sent help message help-mpi-api.txt / mpi-abort
+[vm:06443] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
