@@ -1,0 +1,4 @@
+cocp2_cation -128.2297149926203 {'Co-C_mean': 2.0451821228605764, 'Co-C_min': 2.0444327076366826, 'Co-C_max': 2.0459543057005853, 'Co-centroid': 1.6423393895078349, 'C-C_mean': 1.4327941255393781, 'C-H_mean': 1.0866031181006828}
+cocp2_neutral -133.23977549525065 {'Co-C_mean': 2.1018303235089424, 'Co-C_min': 2.1010794786728653, 'Co-C_max': 2.1026004636002202, 'Co-centroid': 1.7130247525055322, 'C-C_mean': 1.4317064959866939, 'C-H_mean': 1.0868545300380306}
+IE adiabatic 5.010  vertical 5.126 eV
+eps_SOMO(neutral) - eps_LUMO(cation), same geometry: 4.907 eV

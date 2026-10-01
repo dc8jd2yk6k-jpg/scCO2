@@ -59,3 +59,9 @@
 2026-10-01 02:39:36 START [19] 03_intercalate/electronic.py --stage fragments
 2026-10-01 03:03:53 END   [19] rc=0 03_intercalate/electronic.py --stage fragments
 2026-10-01 03:03:53 START [20] 03_intercalate/molecule.py
+2026-10-01 03:17:28 END   [20] rc=1 03_intercalate/molecule.py
+2026-10-01 03:17:28 START [21] 03_intercalate/molecule.py
+2026-10-01 03:17:55 END   [21] rc=1 03_intercalate/molecule.py
+2026-10-01 03:17:55 START [22] 03_intercalate/molecule.py
+2026-10-01 03:22:03 END   [22] rc=0 03_intercalate/molecule.py
+2026-10-01 03:22:03 START [23] 03_intercalate/electronic.py --stage spin

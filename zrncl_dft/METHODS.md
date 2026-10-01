@@ -45,8 +45,15 @@
   - `03_intercalate/symmetry_check.py` restarts from the relaxed structure with the mirror broken: guest tilted by 8°,
     rotated by 6° about the layer normal, all atoms displaced randomly by 0.03 Å. It tests whether the
     axis-parallel orientation is a minimum.
-- **Isolated Co(Cp)₂ (S = ½) and Co(Cp)₂⁺ (S = 0)**: real-space PAW (h = 0.18 Å) with open boundaries, so the cation
-  needs no charged-cell correction. Gives Co–C fingerprints of the oxidation state and the ΔSCF ionisation energy.
+- **Isolated Co(Cp)₂ (S = ½) and Co(Cp)₂⁺ (S = 0)**: real-space PAW (h = 0.18 Å, 5.5 Å vacuum) with open boundaries,
+  so the cation needs no charged-cell correction.
+  - These calculations give the Co–C fingerprints of the oxidation state, the ΔSCF ionisation energies and PBE's
+    curvature for the e₁″ level, ε_SOMO(neutral) − ε_LUMO(cation) at one geometry.
+  - Fermi–Dirac smearing of 0.1 eV keeps the neutral's singly occupied e₁″ pair half/half filled, i.e. the
+    D₅h-averaged molecule.
+  - The neutral relaxation was stopped at fmax 0.05 eV/Å. Beyond that point the geometry starts to follow the
+    Jahn–Teller distortion and the SCF jumps between orbitally polarised solutions.
+  - The cation was relaxed to 0.02 eV/Å.
 
 ## k-point meshes (Γ-centred)
 | system | SCF | DOS / N(E_F) | bands |

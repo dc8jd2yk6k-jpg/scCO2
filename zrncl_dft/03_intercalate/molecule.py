@@ -74,18 +74,26 @@ res = {}
 for tag, charge, spin, mag in [('cocp2_cation', 1, False, 0.0),      # robust one first
                                ('cocp2_neutral', 0, True, 1.0)]:
     done = os.path.join(RUN, f'{tag}_relaxed.traj')
-    if os.path.exists(done):          # restart: re-converge at the relaxed geometry
-        atoms = read(done)
-    else:
+    relax = not os.path.exists(done)
+    if relax:
         atoms = cocp2(co_c=2.10 if charge == 0 else 2.03)
         atoms.center(vacuum=5.5)
+    else:                             # restart: single point at the stored geometry
+        atoms = read(done)
     if spin:
         m = np.zeros(len(atoms))
         m[0] = mag
         atoms.set_initial_magnetic_moments(m)
     atoms.calc = calc(tag, charge, spin)
-    BFGS(atoms, logfile=os.path.join(RUN, f'{tag}.log'),
-         trajectory=os.path.join(RUN, f'{tag}.traj')).run(fmax=0.02, steps=80)
+    # Neutral: fmax 0.05 eV/A.  Below that the symmetric (orbitally averaged)
+    # SCF solution became unstable: the geometry starts to follow the
+    # Jahn-Teller distortion and the SCF jumps between orbitally polarised
+    # solutions.  The reference used here (Co-C 2.102 A, fmax 0.0495) is
+    # step 2 of that run, the D5h-averaged neutral molecule.
+    if relax:
+        BFGS(atoms, logfile=os.path.join(RUN, f'{tag}.log'),
+             trajectory=os.path.join(RUN, f'{tag}.traj')).run(
+                 fmax=0.05 if spin else 0.02, steps=80)
     r = {'energy': atoms.get_potential_energy(), 'geometry': structure_info(atoms),
          'levels': frontier(atoms.calc, spin)}
     if spin:

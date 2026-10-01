@@ -138,10 +138,23 @@ misses is the ≈ 65 meV relative shift of the valence band.
 | Zr–Cl (×3) | 2.751 Å | 2.771 Å | 2.749 Å | 2.780 Å (2.769–2.790) |
 | Cl–Cl slab thickness | 6.211 Å | 6.227 Å | 6.199 Å | 6.264 Å |
 
-GUEST_TABLE
+| Co(Cp)₂ unit | Co–C (Å) | Co–Cp centroid (Å) | C–C (Å) |
+|---|---|---|---|
+| isolated Co(Cp)₂, S = ½, D₅h-averaged (PBE) | 2.102 | 1.713 | 1.432 |
+| isolated Co(Cp)₂⁺, S = 0 (PBE) | 2.045 | 1.642 | 1.433 |
+| in ZrNCl{Co(Cp)₂}₀.₁₀ (PBE+D3) | 2.058 | 1.659 | 1.431 |
 
-- The guest shrinks from the neutral-cobaltocene starting geometry (Co–C 2.10 Å) to Co–C = 2.058 Å and
-  Co–(Cp centroid) = 1.659 Å, which is cobaltocenium-like. See the isolated-molecule references in the table.
+- **The guest's geometry gauges its charge.** Its Co–C and Co–centroid distances lie 23–24 % of the way from the
+  isolated cation to the neutral molecule.
+  - The e₁″ level is Co–Cp antibonding, so this is a bond-length gauge of the electrons left in it: 0.23–0.24 e.
+  - That matches the 0.24–0.28 e from state counting.
+- **Isolated-molecule references** (real-space PAW, open boundaries).
+  - ΔSCF ionisation energy in PBE: 5.01 eV adiabatic, 5.13 eV vertical.
+  - Experiment (ZEKE/MATI, compiled in [Phys. Chem. Chem. Phys. 2023](https://doi.org/10.1039/D2CP04715B)):
+    5.33 eV adiabatic, 5.44 eV vertical.
+  - So PBE makes cobaltocene a donor stronger by 0.3 eV than it really is.
+  - PBE's spurious curvature for the e₁″ level, ε_SOMO(Co(Cp)₂) − ε_LUMO(Co(Cp)₂⁺) at the same geometry, is 4.9 eV in
+    vacuum. It is zero for the exact functional.
 - The uppermost and lowermost Cp hydrogens sit in the Cl hollows of the two walls: H···Cl 2.70 Å, Co 4.2 Å above the
   Cl plane.
 - The host responds as it does to jellium doping, only more strongly. Each comparison below is like-for-like
@@ -229,9 +242,12 @@ change in the layer's filling independently.
     level about 1 eV higher (≈ 0.2 e × 4 eV, plus clearing the band of E_F) than PBE places it.
 - **What this means.**
   - The incomplete transfer is not a fragile detail that a modest correction to PBE removes.
-  - An error of 1 eV in a molecule–host level alignment is within the range typical of semilocal DFT, but it could
-    point either way. PBE places the nearly empty guest level too deep, which favours less transfer. It also places
-    the ZrNCl conduction band too low (gap 1.77 eV vs ~3 eV), which favours more.
+  - An error of 1 eV in a molecule–host level alignment is within the range typical of semilocal DFT, but the known
+    PBE errors point both ways:
+    - Its delocalisation error (vacuum curvature 4.9 eV) places the nearly empty e₁″ level too deep, which favours
+      less transfer.
+    - It underestimates the ionisation energy of cobaltocene by 0.3 eV and places the ZrNCl conduction band too low
+      (gap 1.77 eV vs ~3 eV). Both favour more transfer.
   - Best estimate: **0.8–0.9 e per guest, x_eff = 0.08–0.09**. Complete ionisation cannot be excluded.
 
 **Unfolded band structure.** The supercell states are projected back onto the 1×1 ZrNCl zone. The spectral weights
@@ -319,8 +335,8 @@ superconductivity is confined to the ZrN layers."** The calculations supply the 
 **3. The doping level.** Elemental analysis gives x = 0.10 guests per ZrNCl. Fogg et al. assume one electron per
 guest.
 - **How much charge moves.** PBE transfers most but not all of each guest's electron.
-  - The estimates: 0.76 e from state counting, 0.87 e from the Luttinger count, and 0.8–0.9 e in the +U and
-    guest-shift checks. Bader puts +0.64 e on Co(Cp)₂.
+  - The estimates: 0.76 e from state counting, 0.77 e from the guest's bond lengths, 0.87 e from the Luttinger
+    count, and 0.8–0.9 e in the +U and guest-shift checks. Bader puts +0.64 e on Co(Cp)₂.
   - The host is therefore doped to x_eff = 0.08–0.09 rather than 0.10.
 - **Why the transfer stops short.** The limit is the electrostatics of the charged gallery. It pins the guest's e₁″
   level to E_F (section 3).

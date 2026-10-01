@@ -35,6 +35,16 @@
 
 N(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS 0.274 states/eV/ZrNCl ⇒ m*_DOS = 0.58 m_e (k_z = 0 in-plane curvature: 0.77 m_e).
 
+### Isolated Co(Cp)₂ and Co(Cp)₂⁺ (PBE, FD, open boundaries)
+
+| | Co–C (Å) | Co–Cp centroid (Å) | C–C (Å) |
+|---|---|---|---|
+| Co(Cp)₂ (S=½) | 2.102 | 1.713 | 1.432 |
+| Co(Cp)₂⁺ (S=0) | 2.045 | 1.642 | 1.433 |
+| in ZrNCl{Co(Cp)₂}₀.₁₀ | 2.058 | 1.659 | 1.431 |
+
+Ionisation energy (ΔSCF): adiabatic 5.01 eV, vertical 5.13 eV.
+
 ### ZrNCl{Co(Cp)₂}₀.₁₀ model: electronic structure and charge transfer
 
 | quantity | value |
@@ -60,3 +70,5 @@ N(E_F) in states/eV/ZrNCl (both spins).  CB-bottom DOS 0.274 states/eV/ZrNCl ⇒
 | top of the occupied Co 3d (a₁′/e₂′) levels (eV) | -2.84 | -3.97 | -2.82 |
 | layer gap (eV) | 1.91 | 1.91 | 1.91 |
 | N(E_F), layer states (states/eV/ZrNCl) | 0.266 | 0.261 | 0.268 |
+
+Isolated molecule: ε_SOMO(Co(Cp)₂) − ε_LUMO(Co(Cp)₂⁺) at the neutral geometry = 4.91 eV (PBE curvature of E(N) for the e₁″ level; zero for the exact functional).
